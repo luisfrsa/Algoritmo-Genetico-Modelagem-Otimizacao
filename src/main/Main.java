@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Main {
 
@@ -33,6 +34,7 @@ public class Main {
         String lines[] = content.split("[\\r\\n]+");
         int ind = 0;
         Vertice v = new Vertice();
+        Solucao solucao = new Solucao();
         for (String linha : lines) {
             String splits[] = linha.split(" ");
             for (String elem : splits) {
@@ -56,6 +58,9 @@ public class Main {
                             case 3:
                                 v.demanda = Integer.parseInt(elem);
                                 listaVertices.add(v);
+                                Mediana m = new Mediana();
+                                m.vertice_mediana = v;
+                                solucao.medianas.add(m);
                                 break;
                             default:
                                 break;
@@ -66,6 +71,27 @@ public class Main {
                 }
             }
         }
+//                for (Map.Entry<Double, Mediana> entry : listaDistancias.entrySet()) {
+//                }
+        Mediana m1 = null;
+        Mediana m2 = null;
+        for (Mediana m : solucao.medianas) {
+            if (m1 != null) {
+                m2 = m;
+                System.out.println("b");
+                break;
+            } else {
+                System.out.println("a");
+                m1 = m;
+            }
+
+        }
+        System.out.println(m1.vertice_mediana);
+        System.out.println(m2.vertice_mediana);
+        Vertice v1 = new Vertice();
+        double dist = v1.calculaDistanciaVertices(m1.vertice_mediana, m2.vertice_mediana);
+//        double dist = v1.calculaPitagoras(0,4,3,0);
+        System.out.println(dist);
         /*for (Vertice ver : listaVertices) {
             System.out.println(ver.toString());
         }*/
@@ -91,7 +117,8 @@ class Vertice {
     int posY;
     int capacidade;
     int demanda;
-calcular valores
+//calcular valores
+
     Mediana getMedianaProximaLivre(List<Mediana> medianas) {
         HashMap<Double, Mediana> listaDistancias = new HashMap<>();
         for (Mediana mediana : medianas) {
@@ -108,7 +135,13 @@ calcular valores
     }
 
     Double calculaDistanciaVertices(Vertice vertice1, Vertice vertice2) {
-        return (Double) Math.sqrt(Math.pow(Math.abs(vertice1.posX - vertice2.posX), 2) + Math.pow(Math.abs(vertice1.posX - vertice2.posX), 2));
+        return this.calculaPitagoras(vertice1.posX, vertice2.posX, vertice1.posY, vertice2.posY);
+    }
+
+    Double calculaPitagoras(int x1, int x2, int y1, int y2) {
+        Double retorno = Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
+        return retorno;
+//        return  Math.round(retorno * 100);
     }
 
     @Override
