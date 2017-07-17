@@ -9,13 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
     static List<Vertice> listaVertices = new ArrayList<>();
-    static List<Solucao> listaSolucoes = new ArrayList<>();
+//    static List<Solucao> listaSolucoes = new ArrayList<>();
+    static TreeMap<Double, Solucao> listaSolucoes = new TreeMap<>();
     static int qdePecas = 0;
     static int qdeMedianas = 0;
     static int qdePopulacao = 10;
@@ -29,7 +31,7 @@ public class Main {
         System.exit(0);
     }
 
-    public static void main(String[] args) throws IOException {
+    static public void main(String[] args) throws IOException {
 
         Leitura leitura = new Leitura();
         new Solucao(leitura.readFile());
@@ -40,13 +42,87 @@ public class Main {
         while (size_solucoes < qdePopulacao) {
             Solucao solucao = new Solucao();
             solucao.iniciaPopulacaoAleatoria(qdeMedianas, qdePecas);
-            listaSolucoes.add(solucao);
+            solucao.calculaCusto();
+            listaSolucoes.put(solucao.custo, solucao);
             size_solucoes++;
         }
-        for (Solucao s : listaSolucoes) {
-            s.calculaCusto();
-            System.out.println(s.custo);
+        for (Map.Entry<Double, Solucao> entry : listaSolucoes.entrySet()) {
+            Double custo = entry.getKey();
+            Solucao solucao = entry.getValue();
+//            System.out.println(custo);
+//            break;
         }
+        Solucao solucao1;
+        Solucao solucao2;
+            solucao1 = Genetico.torneio(listaSolucoes, 3);
+            solucao2 = Genetico.torneio(listaSolucoes, 3);
+            Genetico.cruzar(solucao1, solucao2);
+//        while (listaSolucoes.firstEntry().getValue().custo > 25000) {
+//            solucao1 = Genetico.torneio(listaSolucoes, 3);
+//            solucao2 = Genetico.torneio(listaSolucoes, 3);
+//            Genetico.cruzar(solucao1, solucao2);
+//
+//        }
+//        System.out.println(listaSolucoes.lastEntry().getKey());
+//        System.out.println(listaSolucoes.firstEntry().getKey());
+    }
+
+}
+
+class Genetico {
+
+    static Solucao cruzar(Solucao solucao1, Solucao solucao2) {
+        System.out.println("1 ->");
+        System.out.println(solucao1.medianas);
+        System.out.println("2 ->");
+        System.out.println(solucao2.medianas);
+        System.out.println("Cruza ->");
+        ArrayList<Mediana> s = cruzaMedianas(solucao1, solucao2);
+        System.out.println(s);
+        return new Solucao();
+    }
+
+    static ArrayList<Mediana> cruzaMedianas(Solucao solucao1, Solucao solucao2) {
+        int tamanho_medianas_solucao = solucao1.medianas.size();
+        int random;
+        erro, ele esta fazendo diferenciacao dos Ind das medianas, e não dos vertices
+        ArrayList<Mediana> novas_medianas = new ArrayList<>();
+        ArrayList<Mediana> desjuncao_medianas = new ArrayList<>();
+        for (Mediana mediana : solucao1.medianas) {
+            random = (int) (Math.random() * 2);
+            if (solucao2.medianas.contains(mediana)) {
+                novas_medianas.add(mediana);
+            } else {
+                desjuncao_medianas.add(mediana);
+            }
+        }
+        System.out.println("Juncao");
+        System.out.println(novas_medianas);
+        System.out.println("Des");
+        int tamanho_novas = novas_medianas.size();
+        while (tamanho_novas < tamanho_medianas_solucao) {
+            random = (int) (Math.random() * desjuncao_medianas.size());
+            novas_medianas.add(desjuncao_medianas.get(random));
+            desjuncao_medianas.remove(random);
+            tamanho_novas++;
+        }
+        return novas_medianas;
+    }
+
+    /*verificar se para cruzar dois elementos, realizar 2x o algoritmo ou, 1x e utilizar os dois melhores*/
+    static Solucao torneio(TreeMap<Double, Solucao> listaSolucoes, int num_elementos) {
+        TreeMap<Double, Solucao> listaCompetidores = new TreeMap<>();
+        List<Double> keys = new ArrayList<>(listaSolucoes.keySet());
+        Random random = new Random();
+
+        /*substituir por for (0,k) para ver qual é mais rápido*/
+        while (listaCompetidores.size() < num_elementos) {
+            Double randomKey = keys.get(random.nextInt(keys.size()));
+            Solucao escolhido = listaSolucoes.get(randomKey);
+            listaCompetidores.put(escolhido.custo, escolhido);
+        }
+
+        return listaCompetidores.firstEntry().getValue();
     }
 
 }
@@ -91,9 +167,7 @@ class Solucao {
     void calculaCusto() {
         for (Vertice v : listaVertices) {
             custo += v.calculaDistanciaVertices(v.getMedianaProximaLivre(medianas).vertice_mediana);
-            break;
         }
-//        System.out.println(c);
 //        System.out.println("fim custo");
     }
 
@@ -126,7 +200,8 @@ class Mediana {
     public String toString() {
         String ls = System.getProperty("line.separator");
         String retorno;
-        retorno = "[" + id + "][" + vertice_mediana.id + "] Mediana: CAP[" + vertice_mediana.capacidade + "], DEM[" + demanda_atual + "]" + ls + vertice_mediana.toString() + ls;
+//        retorno = "[" + id + "][" + vertice_mediana.id + "] Mediana: CAP[" + vertice_mediana.capacidade + "], DEM[" + demanda_atual + "]" + ls + vertice_mediana.toString() + ls;
+        retorno = "[" + id + "][" + vertice_mediana.id + "] Mediana: CAP[" + vertice_mediana.capacidade + "], DEM[" + demanda_atual + "]" + ls;
         for (Vertice v : lista_vertices) {
             retorno += v.toString();
         }
