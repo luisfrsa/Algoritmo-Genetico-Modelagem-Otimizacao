@@ -94,15 +94,17 @@ class Genetico {
             List<Mediana> novas_medianas = new ArrayList<>();
             Mediana novaMediana;
             Vertice randomVertice;
+            Integer randomIndex = (int) (Math.random() * (solucao.listaVertices.size() - 1));
             while (qde_bits > 0) {
 //                randomVertice = solucao.listaVertices.get((int) (Math.random() * (solucao.listaVertices.size() - 1)));
-                randomVertice = CustomTreeMap.getRandomVertice(solucao.listaVertices);
-                if (!solucao.containsV(randomVertice))  {
-                    estou aqui, basta remover vertice da treemap
+                randomVertice = CustomTreeMap.getRandomVertice(solucao.listaVertices, randomIndex);
+                if (!solucao.containsV(randomVertice)) {
+//                    estou aqui, basta remover vertice da treemap
                     random = (int) (Math.random() * solucao.medianas.size());//index da mediana que sera substituida
                     solucao.medianas.remove(random);
                     novaMediana = new Mediana();
                     novaMediana.vertice_mediana = randomVertice;
+//                    solucao.listaVertices = CustomTreeMap.removeTreemap(solucao.listaVertices,randomIndex,randomVertice);
                     solucao.medianas.add(novaMediana);
                     qde_bits--;
                 }
@@ -382,10 +384,24 @@ class Vertice {
 
 class CustomTreeMap {
 
-    static Vertice getRandomVertice(TreeMap<Integer, List<Vertice>> treeMap) {
+    static Vertice getRandomVertice(TreeMap<Integer, List<Vertice>> treeMap, Integer randomIndex) {
         List<Vertice> randomVertice;
-        randomVertice = treeMap.get((int) (Math.random() * (treeMap.size() - 1)));
-        return randomVertice.get((int) (Math.random() * (randomVertice.size() - 1)));
+        randomVertice = treeMap.get(randomIndex);
+        int randint = (int) Math.floor(Math.random() * (randomVertice.size()-1));
+        Vertice v = null;
+        v = randomVertice.get(randint);
+        null pointer
+//        System.out.println("Rand index = " + randint);
+//        System.out.println("On size = " + randomVertice.size());
+//        System.out.println(v);
+        return v;
+    }
+
+    static TreeMap<Integer, List<Vertice>> removeTreemap(TreeMap<Integer, List<Vertice>> treeMap, Integer valor, Vertice obj) {
+        List<Vertice> tempList = treeMap.get(valor);
+        tempList.remove(obj);
+        treeMap.put(valor, tempList);
+        return treeMap;
     }
 
     static TreeMap<Integer, List<Vertice>> addTreemap(TreeMap<Integer, List<Vertice>> treeMap, Integer valor, Vertice obj) {
