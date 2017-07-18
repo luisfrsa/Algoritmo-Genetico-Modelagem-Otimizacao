@@ -19,11 +19,18 @@ public class Main {
 
 //    static List<Vertice> listaVertices = new ArrayList<>();
     static TreeMap<Integer, List<Vertice>> listaVertices = new TreeMap<>();
+    static ArrayList<Vertice> arrayListaVertices = new ArrayList<>();
 //    static List<Solucao> listaSolucoes = new ArrayList<>();
     static TreeMap<Double, Solucao> listaSolucoes = new TreeMap<>();
+    static int quantidade_mutacao = 0;
     static int qdePecas = 0;
     static int qdeMedianas = 0;
+
     static int qdePopulacao = 10;
+    static int taxaMutacao =3;
+    static int bitsMutacao = 4;
+    static int qdeSorteio = 3;
+    static int pontoParada = 100000;
 
     static void debug() {
         System.out.println(".::Debug::.");
@@ -36,9 +43,11 @@ public class Main {
 
     static public void main(String[] args) throws IOException {
         Leitura leitura = new Leitura();
-        new Solucao(leitura.readFile());
+        Solucao s = new Solucao(leitura.readFile());
         qdePecas = leitura.qdePecas;
         qdeMedianas = leitura.qdeMedianas;
+        int iteracoes = 0;
+        int countParada = 0;
 
         int size_solucoes = listaSolucoes.size();
         while (size_solucoes < qdePopulacao) {
@@ -57,19 +66,22 @@ public class Main {
         Solucao solucao1;
         Solucao solucao2;
         Solucao nova_solucao;
-        int iteracoes = 0;
-        while (listaSolucoes.firstEntry().getValue().custo > 17000) {
-            solucao1 = Genetico.torneio(listaSolucoes, 3);
-            solucao2 = Genetico.torneio(listaSolucoes, 3);
+        while (countParada <= pontoParada && listaSolucoes.firstEntry().getValue().custo > 17000) {
+            solucao1 = Genetico.torneio(listaSolucoes, qdeSorteio);
+            solucao2 = Genetico.torneio(listaSolucoes, qdeSorteio);
             nova_solucao = Genetico.cruzar(solucao1, solucao2);
-//            System.out.println("Size solucao " + nova_solucao.medianas.size());
-            nova_solucao = Genetico.mutacao(nova_solucao, 4, 3);
+//            System.out.println("Sol 1" + solucao1.medianas);
+//            System.out.println("Sol 2" + solucao2.medianas);
+//            System.out.println("Sol cruz" + nova_solucao.medianas);
+            nova_solucao = Genetico.mutacao(nova_solucao, taxaMutacao, bitsMutacao);
             nova_solucao.calculaCusto();/*colocar calculacusto return false caso impossivel, e while =false*/
             if (nova_solucao.custo < listaSolucoes.lastEntry().getKey() && !listaSolucoes.containsKey(nova_solucao.custo)) {
                 listaSolucoes.remove(listaSolucoes.lastEntry().getKey());
                 listaSolucoes.put(nova_solucao.custo, nova_solucao);
+                System.out.println(iteracoes + " Tamanho->" + listaSolucoes.size() + " - Melhor-> " + listaSolucoes.firstEntry().getKey() + " Pior-> " + listaSolucoes.lastEntry().getKey());
+                countParada = 0;
             }
-            System.out.println(iteracoes + " Tamanho->" + listaSolucoes.size() + " - Melhor-> " + listaSolucoes.firstEntry().getKey() + " Pior-> " + listaSolucoes.lastEntry().getKey());
+            countParada++;
             iteracoes++;
         }
         System.out.println(listaSolucoes.firstEntry().getValue().medianas);
@@ -91,24 +103,24 @@ class Genetico {
         int random;
         random = (int) Math.floor(Math.random() * 101);
         if (random < taxa_mucacao) {
+            Main.quantidade_mutacao++;
+//            System.out.println("Mutacao " + Main.quantidade_mutacao);
             List<Mediana> novas_medianas = new ArrayList<>();
             Mediana novaMediana;
             Vertice randomVertice;
-            Integer randomIndex = (int) (Math.random() * (solucao.listaVertices.size() - 1));
+            Integer randomIndex;
             while (qde_bits > 0) {
-//                randomVertice = solucao.listaVertices.get((int) (Math.random() * (solucao.listaVertices.size() - 1)));
-                randomVertice = CustomTreeMap.getRandomVertice(solucao.listaVertices, randomIndex);
+                randomVertice = solucao.arrayListaVertices.get((int) Math.floor(Math.random() * (solucao.arrayListaVertices.size())));
                 if (!solucao.containsV(randomVertice)) {
-//                    estou aqui, basta remover vertice da treemap
                     random = (int) (Math.random() * solucao.medianas.size());//index da mediana que sera substituida
                     solucao.medianas.remove(random);
                     novaMediana = new Mediana();
                     novaMediana.vertice_mediana = randomVertice;
-//                    solucao.listaVertices = CustomTreeMap.removeTreemap(solucao.listaVertices,randomIndex,randomVertice);
                     solucao.medianas.add(novaMediana);
                     qde_bits--;
                 }
             }
+//            System.out.println(solucao.medianas);
         }
         return solucao;
     }
@@ -152,6 +164,8 @@ class Solucao {
     static final AtomicInteger contador = new AtomicInteger(0);
     int id;
     static TreeMap<Integer, List<Vertice>> listaVertices = new TreeMap<>();
+    static ArrayList<Vertice> arrayListaVertices = new ArrayList<>();
+
     List<Mediana> medianas = new ArrayList<>();
     double custo;
 
@@ -161,6 +175,8 @@ class Solucao {
 
     public Solucao(TreeMap<Integer, List<Vertice>> listaVertices) {
         Solucao.listaVertices = listaVertices;
+        arrayListaVertices = Main.arrayListaVertices;
+
     }
 
     /*verificar quantidade de loops para preencher*/
@@ -198,9 +214,8 @@ class Solucao {
                 countVertice++;
             }
         }
-
-        System.out.println(" numero de vertices1 " + listaVertices.size());
-        System.out.println(" numero de vertices2 " + countVertice);
+//        System.out.println(" numero de vertices1 " + listaVertices.size());
+//        System.out.println(" numero de vertices2 " + countVertice);
     }
 
     ArrayList<ArrayList<Mediana>> intersessaoDesjuncao(Solucao other) {
@@ -252,6 +267,7 @@ class Solucao {
     }
 
     boolean containsV(Vertice v) {
+//        System.out.println("ContainsV" + v);
         if (v == null) {
             return true;
         }
@@ -303,9 +319,10 @@ class Mediana {
         String retorno;
 //        retorno = "[" + id + "][" + vertice_mediana.id + "] Mediana: CAP[" + vertice_mediana.capacidade + "], DEM[" + demanda_atual + "]" + ls + vertice_mediana.toString() + ls;
         retorno = "Mediana -> ID_MED [" + vertice_mediana.id + "], ID_VERTICE [" + id + "], CAPACIDADE[" + vertice_mediana.capacidade + "], DEMANDA [" + demanda_atual + "], QDE VERT " + qde_vertices + ls;
-        for (Vertice v : lista_vertices) {
-            retorno += v.toString();
-        }
+//        PRINT MEDIANA!!!
+//        for (Vertice v : lista_vertices) {
+//            retorno += v.toString();
+//        }
         return retorno;
     }
 }
@@ -384,19 +401,20 @@ class Vertice {
 
 class CustomTreeMap {
 
-    static Vertice getRandomVertice(TreeMap<Integer, List<Vertice>> treeMap, Integer randomIndex) {
-        List<Vertice> randomVertice;
-        randomVertice = treeMap.get(randomIndex);
-        int randint = (int) Math.floor(Math.random() * (randomVertice.size()-1));
-        Vertice v = null;
-        v = randomVertice.get(randint);
-        null pointer
+//    static Vertice getRandomVertice(TreeMap<Integer, List<Vertice>> treeMap, Integer randomIndex) {
+//        List<Vertice> randomVertice;
+//        System.out.println("Tree size= " + treeMap.size());
+//        System.out.println("Index Param= " + randomIndex);
+//        randomVertice = treeMap.get(randomIndex);
+//        System.out.println("treemap with param = " + randomVertice);
+//        int randint = (int) Math.floor(Math.random() * (randomVertice.size()));
 //        System.out.println("Rand index = " + randint);
 //        System.out.println("On size = " + randomVertice.size());
+//        Vertice v = null;
+//        v = randomVertice.get(randint);
 //        System.out.println(v);
-        return v;
-    }
-
+//        return v;
+//    }
     static TreeMap<Integer, List<Vertice>> removeTreemap(TreeMap<Integer, List<Vertice>> treeMap, Integer valor, Vertice obj) {
         List<Vertice> tempList = treeMap.get(valor);
         tempList.remove(obj);
@@ -452,6 +470,7 @@ class Leitura {
 
     TreeMap<Integer, List<Vertice>> readFile(String arquivo) throws IOException {
         TreeMap<Integer, List<Vertice>> listaV = new TreeMap(Collections.reverseOrder());
+        ArrayList<Vertice> arrayV = new ArrayList<>();
         String content = new String(Files.readAllBytes(Paths.get(arquivo)));
         String lines[] = content.split("[\\r\\n]+");
         int ind = 0;
@@ -482,6 +501,7 @@ class Leitura {
                                 soma_demanda += v.demanda;
 //                                listaV = CustomTreeMap.addTreemap(listaV, v.demanda, v);
                                 listaV = CustomTreeMap.addTreemap(listaV, v.demanda, v);
+                                arrayV.add(v);
                                 break;
                             default:
                                 break;
@@ -491,7 +511,7 @@ class Leitura {
                 }
             }
         }
-//        Main.exit(String.valueOf(soma_demanda));
+        Main.arrayListaVertices = arrayV;
         return listaV;
 
 //                for (Map.Entry<Double, Mediana> entry : listaDistancias.entrySet()) {
