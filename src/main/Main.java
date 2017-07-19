@@ -1,6 +1,11 @@
 package main;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -12,26 +17,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
-//    static List<Vertice> listaVertices = new ArrayList<>();
     static TreeMap<Integer, List<Vertice>> listaVertices = new TreeMap<>();
     static ArrayList<Vertice> arrayListaVertices = new ArrayList<>();
-//    static List<Solucao> listaSolucoes = new ArrayList<>();
     static TreeMap<Double, Solucao> listaSolucoes = new TreeMap<>();
+    static int run_codes = 0;
     static int quantidade_mutacao = 0;
     static int qdePecas = 0;
     static int qdeMedianas = 0;
 
-    static int qdePopulacao = 10;
-    static int taxaMutacao =3;
-    static int bitsMutacao = 4;
+    static int qdePopulacao = 100;
+    static int taxaMutacao = 10;
+    static int bitsMutacao = 3;
     static int qdeSorteio = 3;
-    static int pontoParada = 100000;
-
+    static int pontoParada = 500;
+    static int tipoCruzamento = 1;/*0->aleatorio, 1->intersessao*/
     static void debug() {
         System.out.println(".::Debug::.");
     }
@@ -43,6 +48,7 @@ public class Main {
 
     static public void main(String[] args) throws IOException {
         Leitura leitura = new Leitura();
+        Relatorio relatorio = new Relatorio();
         Solucao s = new Solucao(leitura.readFile());
         qdePecas = leitura.qdePecas;
         qdeMedianas = leitura.qdeMedianas;
@@ -60,19 +66,14 @@ public class Main {
         for (Map.Entry<Double, Solucao> entry : listaSolucoes.entrySet()) {
             Double custo = entry.getKey();
             Solucao solucao = entry.getValue();
-//            System.out.println(custo);
-//            break;
         }
         Solucao solucao1;
         Solucao solucao2;
         Solucao nova_solucao;
-        while (countParada <= pontoParada && listaSolucoes.firstEntry().getValue().custo > 17000) {
+        while (countParada <= pontoParada && listaSolucoes.firstEntry().getValue().custo > 0) {
             solucao1 = Genetico.torneio(listaSolucoes, qdeSorteio);
             solucao2 = Genetico.torneio(listaSolucoes, qdeSorteio);
-            nova_solucao = Genetico.cruzar(solucao1, solucao2);
-//            System.out.println("Sol 1" + solucao1.medianas);
-//            System.out.println("Sol 2" + solucao2.medianas);
-//            System.out.println("Sol cruz" + nova_solucao.medianas);
+            nova_solucao = Genetico.cruzar(solucao1, solucao2, tipoCruzamento);
             nova_solucao = Genetico.mutacao(nova_solucao, taxaMutacao, bitsMutacao);
             nova_solucao.calculaCusto();/*colocar calculacusto return false caso impossivel, e while =false*/
             if (nova_solucao.custo < listaSolucoes.lastEntry().getKey() && !listaSolucoes.containsKey(nova_solucao.custo)) {
@@ -80,23 +81,102 @@ public class Main {
                 listaSolucoes.put(nova_solucao.custo, nova_solucao);
                 System.out.println(iteracoes + " Tamanho->" + listaSolucoes.size() + " - Melhor-> " + listaSolucoes.firstEntry().getKey() + " Pior-> " + listaSolucoes.lastEntry().getKey());
                 countParada = 0;
+                if (run_codes == 0) {
+                    relatorio.add(iteracoes, listaSolucoes.firstEntry().getKey());
+                }
             }
             countParada++;
             iteracoes++;
         }
-        System.out.println(listaSolucoes.firstEntry().getValue().medianas);
-        System.out.println(listaSolucoes.lastEntry().getKey());
-        System.out.println(listaSolucoes.firstEntry().getKey());
+        if (run_codes == 0) {
+            relatorio.geraRelatorio();
+        }
+//        System.out.println(listaSolucoes.firstEntry().getValue().medianas);
+//        System.out.println(listaSolucoes.lastEntry().getKey());
+//        System.out.println(listaSolucoes.firstEntry().getKey());
+    }
+}
+
+class Relatorio {
+
+    TreeMap<Integer, Double> iteracoes = new TreeMap<>();
+
+    void add(Integer iter, Double melhor) {
+        iteracoes.put(iter, melhor);
+    }
+
+    void geraRelatorio() throws IOException {
+        System.out.println("Iniciando escrita relatorio");
+        String strprint = "var geneticData = [";
+        for (Map.Entry<Integer, Double> entry : iteracoes.entrySet()) {
+            strprint += "[" + entry.getKey() + "," + entry.getValue() + "],";
+        }
+        strprint += "];";
+        escreveRelatorioJs(strprint);
+        System.out.println("Fim escrita relatorio");
+    }
+
+    void escreveRelatorioJs(String data) throws IOException {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream("grafico/data.js"), "utf-8"))) {
+            writer.write(data);
+        }
     }
 }
 
 class Genetico {
 
-    static Solucao cruzar(Solucao solucao1, Solucao solucao2) {
-        ArrayList<Mediana> medianas_cruzadas = cruzaMedianas(solucao1, solucao2);
+    static Solucao cruzar(Solucao solucao1, Solucao solucao2, int tipoCruzamento) {
+        ArrayList<Mediana> medianas_cruzadas = null;
+        switch (tipoCruzamento) {
+            case 1:
+                medianas_cruzadas = cruzaMedianasIntersessao(solucao1, solucao2);
+                break;
+            case 0:
+            default:
+                medianas_cruzadas = cruzaMedianasBitsAleatorios(solucao1, solucao2);
+                break;
+        }
         Solucao retorno = new Solucao();
         retorno.medianas = medianas_cruzadas;
         return retorno;
+    }
+
+    static ArrayList<Mediana> cruzaMedianasBitsAleatorios(Solucao solucao1, Solucao solucao2) {
+        int tamanho_medianas_solucao = solucao1.medianas.size();
+        int random;
+        ArrayList<ArrayList<Mediana>> intersessaoDisjuncao = solucao1.intersessaoDesjuncao(solucao2);
+        ArrayList<Mediana> novas_medianas = new ArrayList<>();
+        ArrayList<Mediana> merge_medianas = new ArrayList<>(solucao1.medianas);
+        merge_medianas.removeAll(solucao2.medianas);
+        merge_medianas.addAll(solucao2.medianas);
+        Mediana medianaAdd;
+        int tamanho_novas = 0;
+        while (tamanho_novas < tamanho_medianas_solucao) {
+            random = (int) (Math.random() * merge_medianas.size());
+            medianaAdd = new Mediana(merge_medianas.get(random));
+            novas_medianas.add(medianaAdd);
+            merge_medianas.remove(random);
+            tamanho_novas++;
+        }
+        return novas_medianas;
+    }
+
+    static ArrayList<Mediana> cruzaMedianasIntersessao(Solucao solucao1, Solucao solucao2) {
+        int tamanho_medianas_solucao = solucao1.medianas.size();
+        int random;
+        ArrayList<ArrayList<Mediana>> intersessaoDisjuncao = solucao1.intersessaoDesjuncao(solucao2);
+        ArrayList<Mediana> novas_medianas = intersessaoDisjuncao.get(0);
+        ArrayList<Mediana> desjuncao_medianas = intersessaoDisjuncao.get(1);
+
+        int tamanho_novas = novas_medianas.size();
+        while (tamanho_novas < tamanho_medianas_solucao) {
+            random = (int) (Math.random() * desjuncao_medianas.size());
+            novas_medianas.add(desjuncao_medianas.get(random));
+            desjuncao_medianas.remove(random);
+            tamanho_novas++;
+        }
+        return novas_medianas;
     }
 
     static Solucao mutacao(Solucao solucao, int taxa_mucacao, int qde_bits) {
@@ -123,25 +203,6 @@ class Genetico {
 //            System.out.println(solucao.medianas);
         }
         return solucao;
-    }
-
-    static ArrayList<Mediana> cruzaMedianas(Solucao solucao1, Solucao solucao2) {
-        int tamanho_medianas_solucao = solucao1.medianas.size();
-        int random;
-        ArrayList<ArrayList<Mediana>> intersessaoDisjuncao = solucao1.intersessaoDesjuncao(solucao2);
-        ArrayList<Mediana> novas_medianas = intersessaoDisjuncao.get(0);
-        ArrayList<Mediana> desjuncao_medianas = intersessaoDisjuncao.get(1);
-
-        int tamanho_novas = novas_medianas.size();
-        while (tamanho_novas < tamanho_medianas_solucao) {
-            random = (int) (Math.random() * desjuncao_medianas.size());
-            novas_medianas.add(desjuncao_medianas.get(random));
-            desjuncao_medianas.remove(random);
-            tamanho_novas++;
-        }
-
-//        System.out.println("Size cruzmaento " + novas_medianas.size());
-        return novas_medianas;
     }
 
     /*verificar se para cruzar dois elementos, realizar 2x o algoritmo ou, 1x e utilizar os dois melhores*/
@@ -340,6 +401,13 @@ class Vertice {
         id = contador.incrementAndGet();
     }
 
+    public Vertice(int posX, int posY, int capacidade, int demanda) {
+        this.posX = posX;
+        this.posY = posY;
+        this.capacidade = capacidade;
+        this.demanda = demanda;
+    }
+
 //    /*para CLONE*/
 //    public Vertice(Vertice v) {
 //        this.id = v.id;
@@ -465,8 +533,26 @@ class Leitura {
     int qdeMedianas = 0;
 
     TreeMap<Integer, List<Vertice>> readFile() throws IOException {
-        return readFile("src/main/caso1.txt");
+//        return readFile("src/main/caso1.txt");
+//        return readFile("src/main/caso2.txt");
+        return readFile("src/main/caso3.txt");
     }
+
+//    TreeMap<Integer, List<Vertice>> readFile3(String arquivo) throws IOException {
+//        TreeMap<Integer, List<Vertice>> listaV = new TreeMap(Collections.reverseOrder());
+//        ArrayList<Vertice> arrayV = new ArrayList<>();
+////        Scanner scan = new Scanner(new FileReader(Main.class.getResource(arquivo).getPath()));
+//        Scanner scan = new Scanner(new FileReader(Main.class.getResource(arquivo).getPath()));
+//        qdePecas = scan.nextInt();
+//        qdeMedianas = scan.nextShort();
+//        for (int i = 0; i < qdePecas; i++) {
+//            Vertice v = new Vertice(scan.nextInt(), scan.nextInt(), scan.nextShort(), scan.nextShort());
+//            listaV = CustomTreeMap.addTreemap(listaV, v.demanda, v);
+//            arrayV.add(v);
+//        }
+//        scan.close();
+//        return listaV;
+//    }
 
     TreeMap<Integer, List<Vertice>> readFile(String arquivo) throws IOException {
         TreeMap<Integer, List<Vertice>> listaV = new TreeMap(Collections.reverseOrder());
@@ -477,9 +563,10 @@ class Leitura {
         int soma_demanda = 0;
         Vertice v = new Vertice();
         for (String linha : lines) {
-            String splits[] = linha.split(" ");
+            String splits[] = linha.split("\\t");
             for (String elem : splits) {
                 if (elem.length() > 0) {
+//                    System.out.println(elem);
                     if (ind == 0) {
                         qdePecas = Integer.parseInt(elem);
                     } else if (ind == 1) {
@@ -512,6 +599,7 @@ class Leitura {
             }
         }
         Main.arrayListaVertices = arrayV;
+//        System.out.println(arrayV);
         return listaV;
 
 //                for (Map.Entry<Double, Mediana> entry : listaDistancias.entrySet()) {
