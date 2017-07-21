@@ -1,0 +1,12 @@
+Este arquivo HTML gera o gráfico carregado do arquivo data.js.
+
+O arquivo data.js contém uma variável chamada geneticData que recebe um array contendo os valores gerados pelo algorítimo, juntamente com seu tempo (número da iteração).
+
+Ex: var geneticData =[[iteracao 1,valor da solucao 1],
+                      [iteracao 2,valor da solucao 2],
+                      ...,
+		      [iteracao n, valor da solucao n]];
+
+- Em seu algorítimo, a cada iteração salvar o número da iteração (tempo) e o valor da melhor solução. 
+- Após o algorítimo parar, salve a solução em um arquivo chamado data.js de acordo com a estrutura acima. 
+- Em seguida, abra a página HTML.

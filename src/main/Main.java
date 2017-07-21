@@ -1,4 +1,4 @@
-package main;
+
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -31,11 +31,11 @@ public class Main {
     static int qdePecas = 0;
     static int qdeMedianas = 0;
 
-    static int qdePopulacao = 100;
-    static int taxaMutacao = 10;
-    static int bitsMutacao = 3;
-    static int qdeSorteio = 3;
-    static int pontoParada = 500;
+    static int qdePopulacao = 5;
+    static int taxaMutacao = 50;
+    static int bitsMutacao = 10;
+    static int qdeSorteio = 2;
+    static int pontoParada = 100;
     static int tipoCruzamento = 1;/*0->aleatorio, 1->intersessao*/
     static void debug() {
         System.out.println(".::Debug::.");
@@ -535,27 +535,19 @@ class Leitura {
     TreeMap<Integer, List<Vertice>> readFile() throws IOException {
 //        return readFile("src/main/caso1.txt");
 //        return readFile("src/main/caso2.txt");
-        return readFile("src/main/caso3.txt");
-    }
+//        return readFile("src/main/caso3.txt");
+//        return readFile("src/main/caso4.txt");
+//        return readFile("src/main/caso5.txt");
+//        return readFile("src/main/caso6.txt");
+        return readFile("src/main/caso7.txt");
+//        return readFile("src/main/caso8.txt");
+//        return readFile("src/main/caso9.txt");
+    } 
 
-//    TreeMap<Integer, List<Vertice>> readFile3(String arquivo) throws IOException {
-//        TreeMap<Integer, List<Vertice>> listaV = new TreeMap(Collections.reverseOrder());
-//        ArrayList<Vertice> arrayV = new ArrayList<>();
-////        Scanner scan = new Scanner(new FileReader(Main.class.getResource(arquivo).getPath()));
-//        Scanner scan = new Scanner(new FileReader(Main.class.getResource(arquivo).getPath()));
-//        qdePecas = scan.nextInt();
-//        qdeMedianas = scan.nextShort();
-//        for (int i = 0; i < qdePecas; i++) {
-//            Vertice v = new Vertice(scan.nextInt(), scan.nextInt(), scan.nextShort(), scan.nextShort());
-//            listaV = CustomTreeMap.addTreemap(listaV, v.demanda, v);
-//            arrayV.add(v);
-//        }
-//        scan.close();
-//        return listaV;
-//    }
 
     TreeMap<Integer, List<Vertice>> readFile(String arquivo) throws IOException {
         TreeMap<Integer, List<Vertice>> listaV = new TreeMap(Collections.reverseOrder());
+//        TreeMap<Integer, List<Vertice>> listaV = new TreeMap();
         ArrayList<Vertice> arrayV = new ArrayList<>();
         String content = new String(Files.readAllBytes(Paths.get(arquivo)));
         String lines[] = content.split("[\\r\\n]+");
@@ -563,7 +555,8 @@ class Leitura {
         int soma_demanda = 0;
         Vertice v = new Vertice();
         for (String linha : lines) {
-            String splits[] = linha.split("\\t");
+//            String splits[] = linha.split("\\t");
+            String splits[] = linha.split(" ");
             for (String elem : splits) {
                 if (elem.length() > 0) {
 //                    System.out.println(elem);
@@ -575,16 +568,17 @@ class Leitura {
                         switch ((ind - 2) % 4) {
                             case 0:
                                 v = new Vertice();
-                                v.posX = Integer.parseInt(elem);
+//                                v.posX = (int) Double.parseDouble(elem);
+                                v.posX = (int) Double.parseDouble(elem);
                                 break;
                             case 1:
-                                v.posY = Integer.parseInt(elem);
+                                v.posY = (int) Double.parseDouble(elem);
                                 break;
                             case 2:
-                                v.capacidade = Integer.parseInt(elem);
+                                v.capacidade = (int) Double.parseDouble(elem);
                                 break;
                             case 3:
-                                v.demanda = Integer.parseInt(elem);
+                                v.demanda = (int) Double.parseDouble(elem);
                                 soma_demanda += v.demanda;
 //                                listaV = CustomTreeMap.addTreemap(listaV, v.demanda, v);
                                 listaV = CustomTreeMap.addTreemap(listaV, v.demanda, v);
