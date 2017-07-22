@@ -1,0 +1,2 @@
+usar random:
+metodo congruencial numeros aleatorios
