@@ -31,15 +31,15 @@ class Main {
     static int qdePecas = 0;
     static int qdeMedianas = 0;
 
-    calcular parametros de acordo com o numero de vertices/medianas
-    static int qdePopulacao = 100;
-    static int taxaMutacao = 4;
+    static int qdePopulacao = 1000;
+    static int taxaMutacao = 10;
     static int bitsMutacao = 0;
-    static int bitsMutacaoRatio = 5;
-    /*bitsMutacao = Numero de medianas/ratio */
-    static int qdeSorteio = (int) Main.qdePopulacao / 20;
+    static int bitsMutacaoRatio = 3;  // 10 medianas /3 = 3 -> bitsMutacao = Numero de medianas/ratio */
+    static int qdeSorteio = (int) Main.qdePopulacao / 20;  // 100 vertices /20 = 5 -> bitsMutacao = Numero de medianas/ratio */
     static int pontoParada = 500;
-    static int tipoCruzamento = 0; /*0->aleatorio, 1->intersessao*/
+    static int tipoCruzamento = 1; //0->aleatorio, 1->intersessao*/
+    static int tipoMutacao = 1; // 0->aleatorio, 1->bits proximos*/
+
     static void debug() {
         System.out.println(".::Debug::.");
     }
@@ -50,9 +50,17 @@ class Main {
     }
 
     static public void main(String[] args) throws IOException {
+        long time_init = System.currentTimeMillis();
         Leitura leitura = new Leitura();
         Relatorio relatorio = new Relatorio();
-        Solucao s = new Solucao(leitura.readFile());
+        Solucao s = new Solucao(leitura.readFile("caso1.txt"));
+        if (Main.run_codes == 0) {
+            System.out.println("Tempo de leitura da entrada: " + ((System.currentTimeMillis() - time_init) / 1000) + "s ");
+            time_init = System.currentTimeMillis();
+            Genetico.calculaDistanciasVertices();
+            System.out.println("Calculando distancia vertices: " + ((System.currentTimeMillis() - time_init) / 1000) + "s ");
+            time_init = System.currentTimeMillis();
+        }
         qdePecas = leitura.qdePecas;
         qdeMedianas = leitura.qdeMedianas;
         int iteracoes = 0;
@@ -66,26 +74,30 @@ class Main {
             listaSolucoes.put(solucao.custo, solucao);
             size_solucoes++;
         }
-//        for (Map.Entry<Double, Solucao> entry : listaSolucoes.entrySet()) {
-//            Double custo = entry.getKey();
-//            Solucao solucao = entry.getValue();
-//        }
+
+        if (Main.run_codes == 0) {
+            System.out.println("Tempo para gerar populacao inicial aleatoria: " + ((System.currentTimeMillis() - time_init) / 1000) + "s ");
+            time_init = System.currentTimeMillis();
+        }
+
         Solucao solucao1;
         Solucao solucao2;
         Solucao nova_solucao;
+
         while (countParada <= pontoParada && listaSolucoes.firstEntry().getValue().custo > 0) {
             solucao1 = Genetico.torneio(listaSolucoes, qdeSorteio);
             solucao2 = Genetico.torneio(listaSolucoes, qdeSorteio);
             nova_solucao = Genetico.cruzar(solucao1, solucao2, tipoCruzamento);
             nova_solucao = Genetico.mutacao(nova_solucao, taxaMutacao, bitsMutacao);
             nova_solucao.calculaCusto();
+
             if (nova_solucao.custo < listaSolucoes.lastEntry().getKey() && !listaSolucoes.containsKey(nova_solucao.custo)) {
+                if (nova_solucao.custo < listaSolucoes.firstEntry().getKey() && Main.run_codes == 0) {
+                    System.out.println(iteracoes + " Tamanho-> " + listaSolucoes.size() + " - Melhor-> " + listaSolucoes.firstEntry().getKey() + " Pior-> " + listaSolucoes.lastEntry().getKey());
+                    countParada = 0;
+                }
                 listaSolucoes.remove(listaSolucoes.lastEntry().getKey());
                 listaSolucoes.put(nova_solucao.custo, nova_solucao);
-                if (Main.run_codes == 0) {
-                    System.out.println(iteracoes + " Tamanho->" + listaSolucoes.size() + " - Melhor-> " + listaSolucoes.firstEntry().getKey() + " Pior-> " + listaSolucoes.lastEntry().getKey());
-                }
-                countParada = 0;
                 if (Main.run_codes == 0) {
                     relatorio.add(iteracoes, listaSolucoes.firstEntry().getKey());
                 }
@@ -94,6 +106,8 @@ class Main {
             iteracoes++;
         }
         if (Main.run_codes == 0) {
+            System.out.println("Tempo para encontrar melhor solucao local: " + ((System.currentTimeMillis() - time_init) / 1000) + "s ");
+            System.out.println("Memoria usada->" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (double) (1024 * 1024)));
             relatorio.geraRelatorio();
         }
 //        System.out.println(listaSolucoes.firstEntry().getValue().medianas);
@@ -168,6 +182,31 @@ class Main {
             return novas_medianas;
         }
 
+        static void calculaDistanciasVertices() {
+            Vertice v1;
+            Double distancia;
+            List<Vertice> vertices1 = new ArrayList<>();
+            for (Vertice v : arrayListaVertices) {
+                vertices1.add(v);
+            }
+            for (Vertice v : arrayListaVertices) {
+                for (int i = 0; i <= vertices1.size() - 1; i++) {
+                    v1 = vertices1.get(i);
+                    distancia = v.calculaDistanciaVertices(v1);
+//                    if (distancia != 0) {
+                    v.distanciaVertices = CustomTreeMap.addTreemap(v.distanciaVertices, distancia, v1);
+                    v.distanciaVerticesHash.put(v1.hashCode(), distancia);
+//                    }
+                }
+            }
+//            for (Map.Entry<Integer, List<Vertice>> entry : listaVertices.entrySet()) {
+//                for (Vertice v : entry.getValue()) {
+//                    System.out.println(v.distanciaVerticesHash.size());
+//                }
+//            }
+
+        }
+
         static ArrayList<Mediana> cruzaMedianasIntersessao(Solucao solucao1, Solucao solucao2) {
             int tamanho_medianas_solucao = solucao1.medianas.size();
             int random;
@@ -185,12 +224,11 @@ class Main {
             return novas_medianas;
         }
 
-        static Solucao mutacao(Solucao solucao, int taxa_mucacao, int qde_bits) {
+        static Solucao mutacao_aleatoria(Solucao solucao, int taxa_mucacao, int qde_bits) {
             int random;
             random = (int) Math.floor(Math.random() * 101);
             if (random < taxa_mucacao) {
                 Main.quantidade_mutacao++;
-//            System.out.println("Mutacao " + Main.quantidade_mutacao);
                 List<Mediana> novas_medianas = new ArrayList<>();
                 Mediana novaMediana;
                 Vertice randomVertice;
@@ -209,6 +247,51 @@ class Main {
 //            System.out.println(solucao.medianas);
             }
             return solucao;
+        }
+
+        static Solucao mutacao_proxima(Solucao solucao, int taxa_mucacao, int qde_bits) {
+            int random;
+            random = (int) Math.floor(Math.random() * 101);
+            if (random < taxa_mucacao) {
+                Main.quantidade_mutacao++;
+                List<Mediana> novas_medianas = new ArrayList<>();
+                Mediana novaMediana;
+                Vertice randomVertice;
+                Integer maxRand;
+//                System.out.println(" init mut " + solucao.medianas);
+                while (qde_bits > 0) {
+                    random = (int) (Math.random() * solucao.medianas.size());//index da mediana que sera substituida
+                    Mediana m = solucao.medianas.get(random);
+                    List<Double> keys = new ArrayList<>(m.vertice_mediana.distanciaVertices.keySet());
+                    maxRand = (int) Math.floor((keys.size() / 30));
+
+                    Random randomgg = new Random();
+                    Double randomKey = keys.get(randomgg.nextInt(maxRand));
+                    List<Vertice> l = m.vertice_mediana.distanciaVertices.get(randomKey);
+                    randomVertice = l.get((int) Math.floor(Math.random() * (l.size())));
+
+                    if (!solucao.containsV(randomVertice)) {
+                        random = (int) (Math.random() * solucao.medianas.size());//index da mediana que sera substituida
+                        solucao.medianas.remove(random);
+                        novaMediana = new Mediana();
+                        novaMediana.vertice_mediana = randomVertice;
+                        solucao.medianas.add(novaMediana);
+                        qde_bits--;
+                    }
+                }
+//                System.out.println(solucao.medianas);
+            }
+            return solucao;
+        }
+
+        static Solucao mutacao(Solucao solucao, int taxa_mucacao, int qde_bits) {
+            if (Main.tipoMutacao == 0) {
+                return mutacao_aleatoria(solucao, taxa_mucacao, qde_bits);
+            } else {
+                return mutacao_proxima(solucao, taxa_mucacao, qde_bits);
+
+            }
+
         }
 
         /*verificar se para cruzar dois elementos, realizar 2x o algoritmo ou, 1x e utilizar os dois melhores*/
@@ -413,6 +496,9 @@ class Main {
     private static class Vertice {
 
         static final AtomicInteger contador = new AtomicInteger(0);
+        TreeMap<Double, List<Vertice>> distanciaVertices = new TreeMap<>();
+        HashMap<Integer, Double> distanciaVerticesHash = new HashMap<>();
+
         int id;
         int posX;
         int posY;
@@ -441,10 +527,14 @@ class Main {
         Mediana getMedianaProximaLivre(List<Mediana> medianas) {
             int capacidade_mediana, soma_cap_demanda;
             TreeMap<Double, List<Mediana>> listaDistancias = new TreeMap<>();
-            int sizeGG = 0;
+            int size = 0;
+            Double distancia;
             for (Mediana mediana : medianas) {
-                sizeGG++;
-                listaDistancias = CustomTreeMap.addTreemap(listaDistancias, this.calculaDistanciaVertices(mediana.vertice_mediana), mediana);
+                size++;
+                distancia = this.calculaDistanciaVertices(mediana.vertice_mediana);
+//                 distancia = this.distanciaVerticesHash.get(mediana.vertice_mediana.hashCode());
+
+                listaDistancias = CustomTreeMap.addTreemap(listaDistancias, distancia, mediana);
             }
 
             for (Map.Entry<Double, List<Mediana>> entry : listaDistancias.entrySet()) {
@@ -461,7 +551,7 @@ class Main {
             }
             System.out.println("Sem medianas com capacidades");
             System.out.println("size treemap " + listaDistancias.size());
-            System.out.println("size gg " + listaDistancias.size());
+            System.out.println("size " + listaDistancias.size());
             for (Map.Entry<Double, List<Mediana>> entry : listaDistancias.entrySet()) {
                 for (Mediana mediana : entry.getValue()) {
                     System.out.println(mediana);
@@ -508,6 +598,22 @@ class Main {
         static TreeMap<Integer, List<Vertice>> removeTreemap(TreeMap<Integer, List<Vertice>> treeMap, Integer valor, Vertice obj) {
             List<Vertice> tempList = treeMap.get(valor);
             tempList.remove(obj);
+            treeMap.put(valor, tempList);
+            return treeMap;
+        }
+
+        static TreeMap<Double, List<Vertice>> addTreemap(TreeMap<Double, List<Vertice>> treeMap, Double valor, Vertice obj) {
+            List<Vertice> tempList = null;
+            if (treeMap.containsKey(valor)) {
+                tempList = treeMap.get(valor);
+                if (tempList == null) {
+                    tempList = new ArrayList<>();
+                }
+                tempList.add(obj);
+            } else {
+                tempList = new ArrayList<>();
+                tempList.add(obj);
+            }
             treeMap.put(valor, tempList);
             return treeMap;
         }
@@ -580,7 +686,7 @@ class Main {
             }
             qdePecas = scan.nextInt();
             qdeMedianas = scan.nextInt();
-            Main.bitsMutacao = qdeMedianas / Main.bitsMutacaoRatio;
+            Main.bitsMutacao = (int) Math.floor(qdeMedianas / Main.bitsMutacaoRatio);
             if (Main.bitsMutacao < 2) {
                 Main.bitsMutacao = 2;
             }
@@ -612,6 +718,7 @@ class Main {
                 ind++;
             }
             scan.close();
+            Main.listaVertices = listaV;
             Main.arrayListaVertices = arrayV;
             return listaV;
         }
@@ -660,6 +767,7 @@ class Main {
                     }
                 }
             }
+
             Main.arrayListaVertices = arrayV;
 //        System.out.println(arrayV);
             return listaV;
