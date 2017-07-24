@@ -26,18 +26,19 @@ class Main {
     static TreeMap<Integer, List<Vertice>> listaVertices = new TreeMap<>();
     static ArrayList<Vertice> arrayListaVertices = new ArrayList<>();
     static TreeMap<Double, Solucao> listaSolucoes = new TreeMap<>();
-    static int run_codes = 0;
+    static int run_codes = 1;
     static int quantidade_mutacao = 0;
     static int qdePecas = 0;
     static int qdeMedianas = 0;
 
-    static int qdePopulacao = 1000;
+    static int qdePopulacao = 100;
     static int taxaMutacao = 10;
     static int bitsMutacao = 0;
-    static int bitsMutacaoRatio = 3;  // 10 medianas /3 = 3 -> bitsMutacao = Numero de medianas/ratio */
-    static int qdeSorteio = (int) Main.qdePopulacao / 20;  // 100 vertices /20 = 5 -> bitsMutacao = Numero de medianas/ratio */
-    static int pontoParada = 500;
-    static int tipoCruzamento = 1; //0->aleatorio, 1->intersessao*/
+    static int bitsMutacaoRatio = 5;  // 10 medianas /3 = 3 -> bitsMutacao = Numero de medianas/ratio */
+    static int qdeSorteioRatio = 10;  // 100 populacao /20 = 5 -> qdeSorteio = Numero da populacao/ratio */
+    static int qdeSorteio = 0;  // 100 vertices /20 = 5 -> bitsMutacao = Numero de medianas/ratio */
+    static int pontoParada = 5000;
+    static int tipoCruzamento =1; //0->aleatorio, 1->intersessao*/
     static int tipoMutacao = 1; // 0->aleatorio, 1->bits proximos*/
 
     static void debug() {
@@ -53,11 +54,15 @@ class Main {
         long time_init = System.currentTimeMillis();
         Leitura leitura = new Leitura();
         Relatorio relatorio = new Relatorio();
-        Solucao s = new Solucao(leitura.readFile("caso1.txt"));
+//        Solucao s = new Solucao(leitura.readFile("caso1.txt", Main.run_codes));
+        Solucao s = new Solucao(leitura.readFile("caso1.txt", 0));
+
         if (Main.run_codes == 0) {
             System.out.println("Tempo de leitura da entrada: " + ((System.currentTimeMillis() - time_init) / 1000) + "s ");
             time_init = System.currentTimeMillis();
-            Genetico.calculaDistanciasVertices();
+        }
+        Genetico.calculaDistanciasVertices();
+        if (Main.run_codes == 0) {
             System.out.println("Calculando distancia vertices: " + ((System.currentTimeMillis() - time_init) / 1000) + "s ");
             time_init = System.currentTimeMillis();
         }
@@ -108,6 +113,7 @@ class Main {
         if (Main.run_codes == 0) {
             System.out.println("Tempo para encontrar melhor solucao local: " + ((System.currentTimeMillis() - time_init) / 1000) + "s ");
             System.out.println("Memoria usada->" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (double) (1024 * 1024)));
+            System.out.println(".::Melhor solucao::. " + listaSolucoes.firstEntry().getKey());
             relatorio.geraRelatorio();
         }
 //        System.out.println(listaSolucoes.firstEntry().getValue().medianas);
@@ -264,7 +270,6 @@ class Main {
                     Mediana m = solucao.medianas.get(random);
                     List<Double> keys = new ArrayList<>(m.vertice_mediana.distanciaVertices.keySet());
                     maxRand = (int) Math.floor((keys.size() / 30));
-
                     Random randomgg = new Random();
                     Double randomKey = keys.get(randomgg.nextInt(maxRand));
                     List<Vertice> l = m.vertice_mediana.distanciaVertices.get(randomKey);
@@ -660,26 +665,14 @@ class Main {
         int qdePecas = 0;
         int qdeMedianas = 0;
 
-        TreeMap<Integer, List<Vertice>> readFile() throws IOException {
-            return readFile("caso1.txt");
-//        return readFile("caso2.txt");
-//        return readFile("caso3.txt");
-//        return readFile("caso4.txt");
-//        return readFile("caso5.txt");
-//        return readFile("caso6.txt");
-//            return readFile("caso7.txt");
-//        return readFile("caso8.txt");
-//        return readFile("caso9.txt");
-        }
-
-        TreeMap<Integer, List<Vertice>> readFile(String arquivo) throws IOException {
+        TreeMap<Integer, List<Vertice>> readFile(String arquivo, int runcodes) throws IOException {
             TreeMap<Integer, List<Vertice>> listaV = new TreeMap<>(Collections.reverseOrder());
             ArrayList<Vertice> arrayV = new ArrayList<>();
             int ind = 0;
             int soma_demanda = 0;
             Vertice v = new Vertice();
             Scanner scan;
-            if (Main.run_codes == 1) {
+            if (runcodes == 1) {
                 scan = new Scanner(System.in);
             } else {
                 scan = new Scanner(new FileReader(Main.class.getResource(arquivo).getPath()));
@@ -689,6 +682,14 @@ class Main {
             Main.bitsMutacao = (int) Math.floor(qdeMedianas / Main.bitsMutacaoRatio);
             if (Main.bitsMutacao < 2) {
                 Main.bitsMutacao = 2;
+            }
+            Main.qdeSorteio = (int) Main.qdePopulacao / Main.qdeSorteioRatio;
+            if (Main.qdeSorteio < 2) {
+                Main.qdeSorteio = 2;
+            }
+            if (Main.run_codes == 0) {
+                System.out.println("Bits mutacao" + Main.bitsMutacao);
+                System.out.println("QDE sorteio" + Main.qdeSorteio);
             }
             scan.nextLine();
 //	vertices = new Vertice[nrVertices];
