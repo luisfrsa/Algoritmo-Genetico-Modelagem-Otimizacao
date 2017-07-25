@@ -30,11 +30,11 @@ class Main {
     static int qdeMedianas = 0;
 
     static int qdePopulacao = 1000;
-    static int taxaMutacao = 4;
-    static int bitsMutacao = 3;
+    static int taxaMutacao = 5;
+    static int bitsMutacao = 2;
     static int qdeSorteio = 50;
     static int pontoParada = 1000;
-    static int tipoCruzamento = 0; //0->aleatorio, 1->intersessao*/
+    static int tipoCruzamento = 1; //0->aleatorio, 1->intersessao*/
     static int tipoMutacao = 0; // 0->aleatorio, 1->bits proximos*/
 
     static void debug() {
@@ -91,23 +91,17 @@ class Main {
         while (countParada <= pontoParada && listaSolucoes.firstEntry().getValue().custo > 0) {
             solucao1 = Genetico.torneio(listaSolucoes, qdeSorteio);
             solucao2 = Genetico.torneio(listaSolucoes, qdeSorteio);
-            if (solucao1 == solucao2) {
-//                continue;
+            if (solucao1.custo == solucao2.custo) {
+                continue;
             }
             nova_solucao = Genetico.cruzar(solucao1, solucao2, tipoCruzamento);
-//            System.out.println(nova_solucao.custo);
-//            System.out.println("cruzar");
 //            nova_solucao.verificaMedianasRepetidas();
-//            System.out.println("mutar");
             nova_solucao = Genetico.mutacao(nova_solucao, taxaMutacao, bitsMutacao);
 //            nova_solucao.verificaMedianasRepetidas();
-            System.out.println("a " + nova_solucao.custo);
-
             if (nova_solucao.custo < listaSolucoes.lastEntry().getKey() && !listaSolucoes.containsKey(nova_solucao.custo)) {
                 if (nova_solucao.custo < listaSolucoes.firstEntry().getKey() && Main.run_codes == 0) {
                     System.out.println(iteracoes + " Tamanho-> " + listaSolucoes.size() + " - Melhor-> " + listaSolucoes.firstEntry().getKey() + " Pior-> " + listaSolucoes.lastEntry().getKey());
                 }
-                System.out.println("g");
                 countParada = 0;
                 listaSolucoes.remove(listaSolucoes.lastEntry().getKey());
                 listaSolucoes.put(nova_solucao.custo, nova_solucao);
@@ -165,11 +159,10 @@ class Main {
             Solucao retorno = null;
             switch (tipoCruzamento) {
                 case 1:
-//                     retorno = cruzaMedianasIntersessao(solucao1, solucao2);
+                    retorno = cruzaMedianasIntersessao(solucao1, solucao2);
                     break;
                 case 0:
                 default:
-
                     retorno = cruzaMedianasBitsAleatorios(solucao1, solucao2);
                     break;
             }
@@ -178,40 +171,37 @@ class Main {
 
         static Solucao cruzaMedianasBitsAleatorios(Solucao solucao1, Solucao solucao2) {
             int tamanho_medianas_solucao = solucao1.medianas.size();
-            ArrayList<Mediana> listaMed = new ArrayList<>();
+            Solucao sol_temp = new Solucao();
 //            int i = (int) Math.floor(Math.random() * 2);
+            Solucao retorno1 = new Solucao();
             Mediana m1;
             Mediana m2;
             for (int i = 0; i <= solucao1.medianas.size() - 1; i++) {
                 m1 = solucao1.medianas.get(i);
                 m2 = solucao2.medianas.get(i);
-                if (!listaMed.contains(m1)) {
-                    listaMed.add(new Mediana(m1));
+                if (!sol_temp.containsV(m1.vertice_mediana)) {
+                    sol_temp.medianas.add(new Mediana(m1));
                 }
-                if (!listaMed.contains(m2)) {
-                    listaMed.add(new Mediana(m2));
+                if (!sol_temp.containsV(m2.vertice_mediana)) {
+                    sol_temp.medianas.add(new Mediana(m2));
                 }
             }
-            Collections.shuffle(listaMed);
-            Solucao retorno1 = new Solucao();
+            Collections.shuffle(sol_temp.medianas);
             Solucao retorno2 = new Solucao();
-            int j = listaMed.size() - 1;
-            for (int i = 0; i <= solucao1.medianas.size(); i++) {
-                retorno1.medianas.add(listaMed.get(i));
-                retorno2.medianas.add(listaMed.get(j));
+            int j = sol_temp.medianas.size() - 1;
+            for (int i = 0; i <= solucao1.medianas.size() - 1; i++) {
+                retorno1.medianas.add(sol_temp.medianas.get(i));
+                retorno2.medianas.add(sol_temp.medianas.get(j));
                 j--;
             }
 
             retorno1.calculaCusto();
             retorno2.calculaCusto();
-//            System.out.println("--------------Med 1-------------> " + solucao1.custo);
-//            System.out.println(solucao1.medianas);
-//            System.out.println("--------------Med 2--------------> " + solucao2.custo);
-//            System.out.println(solucao2.medianas);
-//            System.out.println("--------------RETORNO 1-------------> " + retorno1.custo);
-//            System.out.println(retorno1.medianas);
-//            System.out.println("--------------RETORNO 2--------------> " + retorno2.custo);
-//            System.out.println(retorno2.medianas);
+
+//            System.out.println("s1 -> " + solucao1.custo);
+//            System.out.println("s2 -> " + solucao2.custo);
+//            System.out.println("r1 -> " + retorno1.custo);
+//            System.out.println("r2 -> " + retorno2.custo);
             if (retorno1.custo < retorno2.custo) {
                 return retorno1;
             }
@@ -263,7 +253,7 @@ class Main {
 
         }
 
-        static ArrayList<Mediana> cruzaMedianasIntersessao(Solucao solucao1, Solucao solucao2) {
+        static Solucao cruzaMedianasIntersessao(Solucao solucao1, Solucao solucao2) {
             int tamanho_medianas_solucao = solucao1.medianas.size();
             int random;
             ArrayList<ArrayList<Mediana>> intersessaoDisjuncao = solucao1.intersessaoDesjuncao(solucao2);
@@ -277,7 +267,10 @@ class Main {
                 desjuncao_medianas.remove(random);
                 tamanho_novas++;
             }
-            return novas_medianas;
+            Solucao s = new Solucao();
+            s.medianas = novas_medianas;
+//            s.calculaCusto();
+            return s;
         }
 
         static Solucao mutacao_aleatoria(Solucao solucao, int taxa_mucacao, int qde_bits) {
@@ -436,6 +429,9 @@ class Main {
             this.custo = 0;
             int countVertice = 0;
             Mediana m;
+            for (Mediana me : medianas) {
+                me.demanda_atual = 0;
+            }
             for (Map.Entry<Integer, List<Vertice>> entry : listaVertices.entrySet()) {
                 for (Vertice v : entry.getValue()) {
                     m = v.getMedianaProximaLivre(medianas);
