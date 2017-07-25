@@ -37,7 +37,7 @@ class Main {
     static int tipoCruzamento = 0; //0->aleatorio, 1->intersessao*/
     static int tipoMutacao = 0; // 0->aleatorio, 1->bits proximos*/
 
-    static void debug() { 
+    static void debug() {
         System.out.println(".::Debug::.");
     }
 
@@ -54,7 +54,6 @@ class Main {
         long time_init = System.currentTimeMillis();
         Leitura leitura = new Leitura();
         Relatorio relatorio = new Relatorio();
-//        Solucao s = new Solucao(leitura.readFile("caso1.txt", Main.run_codes));
         Solucao s = new Solucao(leitura.readFile("caso1.txt", Main.run_codes));
 
         if (Main.run_codes == 0) {
@@ -76,7 +75,7 @@ class Main {
             Solucao solucao = new Solucao();
             solucao.iniciaPopulacaoAleatoria(qdeMedianas, qdePecas);
             solucao.calculaCusto();
-            solucao.verificaMedianasRepetidas();
+//            solucao.verificaMedianasRepetidas();
             listaSolucoes.put(solucao.custo, solucao);
             size_solucoes++;
         }
@@ -92,18 +91,23 @@ class Main {
         while (countParada <= pontoParada && listaSolucoes.firstEntry().getValue().custo > 0) {
             solucao1 = Genetico.torneio(listaSolucoes, qdeSorteio);
             solucao2 = Genetico.torneio(listaSolucoes, qdeSorteio);
+            if (solucao1 == solucao2) {
+//                continue;
+            }
             nova_solucao = Genetico.cruzar(solucao1, solucao2, tipoCruzamento);
+//            System.out.println(nova_solucao.custo);
 //            System.out.println("cruzar");
-            nova_solucao.verificaMedianasRepetidas();
+//            nova_solucao.verificaMedianasRepetidas();
 //            System.out.println("mutar");
             nova_solucao = Genetico.mutacao(nova_solucao, taxaMutacao, bitsMutacao);
-            nova_solucao.verificaMedianasRepetidas();
-            nova_solucao.calculaCusto();
+//            nova_solucao.verificaMedianasRepetidas();
+            System.out.println("a " + nova_solucao.custo);
 
             if (nova_solucao.custo < listaSolucoes.lastEntry().getKey() && !listaSolucoes.containsKey(nova_solucao.custo)) {
                 if (nova_solucao.custo < listaSolucoes.firstEntry().getKey() && Main.run_codes == 0) {
                     System.out.println(iteracoes + " Tamanho-> " + listaSolucoes.size() + " - Melhor-> " + listaSolucoes.firstEntry().getKey() + " Pior-> " + listaSolucoes.lastEntry().getKey());
                 }
+                System.out.println("g");
                 countParada = 0;
                 listaSolucoes.remove(listaSolucoes.lastEntry().getKey());
                 listaSolucoes.put(nova_solucao.custo, nova_solucao);
@@ -165,6 +169,7 @@ class Main {
                     break;
                 case 0:
                 default:
+
                     retorno = cruzaMedianasBitsAleatorios(solucao1, solucao2);
                     break;
             }
@@ -173,34 +178,44 @@ class Main {
 
         static Solucao cruzaMedianasBitsAleatorios(Solucao solucao1, Solucao solucao2) {
             int tamanho_medianas_solucao = solucao1.medianas.size();
-            int i = (int) Math.floor(Math.random() * 2);
-            Solucao retorno = new Solucao();
-            Mediana m;
-            
-           
-            
-            while (retorno.medianas.size() < tamanho_medianas_solucao) {
-                m = solucao1.medianas.get(i);
-                if (i % 2 == 0 && !retorno.containsV(m.vertice_mediana)) {
-                    retorno.medianas.add(new Mediana(m));
-                } else {
-                    m = solucao2.medianas.get(i);
-                    if (!retorno.containsV(m.vertice_mediana)) {
-                        retorno.medianas.add(new Mediana(m));
-                    }
+            ArrayList<Mediana> listaMed = new ArrayList<>();
+//            int i = (int) Math.floor(Math.random() * 2);
+            Mediana m1;
+            Mediana m2;
+            for (int i = 0; i <= solucao1.medianas.size() - 1; i++) {
+                m1 = solucao1.medianas.get(i);
+                m2 = solucao2.medianas.get(i);
+                if (!listaMed.contains(m1)) {
+                    listaMed.add(new Mediana(m1));
                 }
-                i++;
-                if (i >= tamanho_medianas_solucao) {
-                    i = 0;
+                if (!listaMed.contains(m2)) {
+                    listaMed.add(new Mediana(m2));
                 }
             }
-//             System.out.println("--------------Med 1--------------");
+            Collections.shuffle(listaMed);
+            Solucao retorno1 = new Solucao();
+            Solucao retorno2 = new Solucao();
+            int j = listaMed.size() - 1;
+            for (int i = 0; i <= solucao1.medianas.size(); i++) {
+                retorno1.medianas.add(listaMed.get(i));
+                retorno2.medianas.add(listaMed.get(j));
+                j--;
+            }
+
+            retorno1.calculaCusto();
+            retorno2.calculaCusto();
+//            System.out.println("--------------Med 1-------------> " + solucao1.custo);
 //            System.out.println(solucao1.medianas);
-//             System.out.println("--------------Med 2--------------");
+//            System.out.println("--------------Med 2--------------> " + solucao2.custo);
 //            System.out.println(solucao2.medianas);
-//             System.out.println("--------------RETORNO--------------");
-//            System.out.println(retorno.medianas);
-            return retorno;
+//            System.out.println("--------------RETORNO 1-------------> " + retorno1.custo);
+//            System.out.println(retorno1.medianas);
+//            System.out.println("--------------RETORNO 2--------------> " + retorno2.custo);
+//            System.out.println(retorno2.medianas);
+            if (retorno1.custo < retorno2.custo) {
+                return retorno1;
+            }
+            return retorno2;
         }
 
         static ArrayList<Mediana> cruzaMedianasBitsAleatorios_old(Solucao solucao1, Solucao solucao2) {
@@ -287,6 +302,7 @@ class Main {
                 }
 //            System.out.println(solucao.medianas);
             }
+            solucao.calculaCusto();
             return solucao;
         }
 
@@ -325,6 +341,7 @@ class Main {
                 }
 //                System.out.println(solucao.medianas);
             }
+            solucao.calculaCusto();
             return solucao;
         }
 
@@ -416,16 +433,23 @@ class Main {
         }
 
         void calculaCusto() {
-            custo = 0;
+            this.custo = 0;
             int countVertice = 0;
+            Mediana m;
             for (Map.Entry<Integer, List<Vertice>> entry : listaVertices.entrySet()) {
                 for (Vertice v : entry.getValue()) {
-                    custo += v.calculaDistanciaVertices(v.getMedianaProximaLivre(medianas).vertice_mediana);
+                    m = v.getMedianaProximaLivre(medianas);
+                    if (m != null) {
+                        this.custo += v.calculaDistanciaVertices(m.vertice_mediana);
+                    } else {
+                        this.custo = Double.MAX_VALUE;
+                        break;
+                    }
                     countVertice++;
                 }
             }
-//        System.out.println(" numero de vertices1 " + listaVertices.size());
-//        System.out.println(" numero de vertices2 " + countVertice);
+//            System.out.println(" custo " + this.custo);
+//            System.out.println(" numero de vertices2 " + countVertice);
         }
 
         ArrayList<ArrayList<Mediana>> intersessaoDesjuncao(Solucao other) {
@@ -511,7 +535,7 @@ class Main {
                         if (countMediana > 1) {
                             System.out.println("dumb -> " + m.vertice_mediana.id + " " + m2.vertice_mediana.id);
                             System.out.println(this.medianas);
-                                        Main.exit();
+                            Main.exit();
 
                             return;
                         }
@@ -579,19 +603,14 @@ class Main {
             this.demanda = demanda;
         }
 
-//    /*para CLONE*/
-//    public Vertice(Vertice v) {
-//        this.id = v.id;
-//        this.posX = v.posX;
-//        this.posY = v.posY;
-//        this.capacidade = v.capacidade;
-//        this.demanda = v.demanda;
-//    }
         Mediana getMedianaProximaLivre(List<Mediana> medianas) {
             int capacidade_mediana, soma_cap_demanda;
             TreeMap<Double, List<Mediana>> listaDistancias = new TreeMap<>();
             int size = 0;
             Double distancia;
+//          for (Mediana mediana : medianas) {
+//              System.out.println(mediana.demanda_atual);
+//          }
             for (Mediana mediana : medianas) {
                 size++;
                 distancia = this.calculaDistanciaVertices(mediana.vertice_mediana);
@@ -612,16 +631,18 @@ class Main {
                     }
                 }
             }
-            System.out.println("Sem medianas com capacidades");
-            System.out.println("size treemap " + listaDistancias.size());
-            System.out.println("size " + listaDistancias.size());
-            for (Map.Entry<Double, List<Mediana>> entry : listaDistancias.entrySet()) {
-                for (Mediana mediana : entry.getValue()) {
-                    System.out.println(mediana);
-                }
-            }
-            Main.exit(" Erro! Nao foi encontrada mediana com espaco suficiente para ligar ao vertice");
-            return new Mediana(0);
+//            System.out.println("Sem medianas com capacidades");
+//            System.out.println("size treemap " + listaDistancias.size());
+//            System.out.println("size " + listaDistancias.size());
+//            for (Map.Entry<Double, List<Mediana>> entry : listaDistancias.entrySet()) {
+//                for (Mediana mediana : entry.getValue()) {
+//                    System.out.println(mediana);
+//                }
+//            }
+//            Main.exit(" Erro! Nao foi encontrada mediana com espaco suficiente para ligar ao vertice");
+//            System.out.println("Nao foi encontrada mediana com espaco suficiente para ligar ao vertice");
+//            return new Mediana(0);
+            return null;
         }
 
         Double calculaDistanciaVertices(Vertice vertice) {
