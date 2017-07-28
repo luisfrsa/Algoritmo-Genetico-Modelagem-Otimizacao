@@ -30,11 +30,11 @@ class Main {
     static int qdeMedianas = 0;
 
     static int qdePopulacao = 1000;
-    static int taxaMutacao = 5;
+    static int taxaMutacao = 3;
     static int bitsMutacao = 2;
-    static int qdeSorteio = 50;
+    static int qdeSorteio = 30;
     static int pontoParada = 1000;
-    static int tipoCruzamento = 1; //0->aleatorio, 1->intersessao*/
+    static int tipoCruzamento = 0; //0->aleatorio, 1->intersessao*/
     static int tipoMutacao = 0; // 0->aleatorio, 1->bits proximos*/
 
     static void debug() {
