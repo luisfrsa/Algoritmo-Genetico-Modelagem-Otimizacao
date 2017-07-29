@@ -154,6 +154,87 @@ class Main {
 
     private static class Genetico {
 
+        static Solucao buscaLocal(Solucao solucao) {
+            Genetico.getMelhorVizinhoTipo1(solucao);
+            return solucao;
+        }
+
+        /**
+         * Dada uma solucao S, gerar N vizinhos onde e trocada uma mediana 1 vez
+         * para cada vizinho, de maneira que esta mediana seja removida e subs
+         * tituida por um de seus vértices ligados. Este vertice e substituido
+         * aleatoriamente se tipo=0, Este vertice e substituido aleatoriamente
+         * dentre os N mais próximos se tipo=1,
+         */
+        static Solucao getMelhorVizinho(Solucao solucao, int tipo, int N) {
+            List<Mediana> listaM = new ArrayList<>();
+            int size = solucao.medianas.size();
+            List<Solucao> vizinhos = new ArrayList<>();
+            Solucao melhor_vizinho = null;
+            Solucao vizinho;
+            int j;
+            for (int i = 0; i < size; i++) {
+                vizinho = new Solucao();
+                j = 0;
+                for (Mediana m : solucao.medianas) {
+                    if (i == j) {
+                        if (tipo == 0) {
+                            vizinho.medianas.add(Genetico.getMelhorVizinhoTipo1(solucao, m));
+                        } else {
+                            vizinho.medianas.add(Genetico.getMelhorVizinhoTipo2(solucao, m, N));
+                        }
+                    } else {
+                        vizinho.medianas.add(new Mediana(m));
+                    }
+                    j++;
+                }
+                vizinho.calculaCusto();
+                if (melhor_vizinho == null || melhor_vizinho.custo > vizinho.custo) {
+                    melhor_vizinho = vizinho;
+                }
+            }
+            return melhor_vizinho;
+        }
+
+        static Mediana getMelhorVizinhoTipo1(Solucao solucao, Mediana m) {
+            int random;
+            Mediana retorno;
+            random = (int) (Math.random() * m.lista_vertices.size());
+            Vertice v = m.lista_vertices.get(random);
+            while (solucao.containsV(v)) {
+                random = (int) (Math.random() * m.lista_vertices.size());
+                v = m.lista_vertices.get(random);
+            }
+            retorno = new Mediana(v.id);
+            retorno.vertice_mediana = v;
+            return retorno;
+        }
+
+        static Mediana getMelhorVizinhoTipo2(Solucao solucao, Mediana m, int taxaQde) {
+            int random;
+            TreeMap<Double, Vertice> listaDistancias = new TreeMap<>();
+            for(Vertice v : m.lista_vertices){
+            listaDistancias.put(Double.NaN, v);
+            estou aqui, colocar dentro o treemap, ordenar e retornar
+                    fazer best improvement na funcao pai, de maneira que retorna assim
+                            que encontrar um sucessor melhor.;
+pensar se inverter a ordem do tipo 1 ou 2, tendo em vista que 2 é melhor, porem mais custoso
+        talvez manter a ordem
+            }
+            Mediana retorno;
+            random = (int) (Math.random() * m.lista_vertices.size());
+            Vertice v = m.lista_vertices.get(random);
+            while (solucao.containsV(v)) {
+                random = (int) (Math.random() * m.lista_vertices.size());
+                v = m.lista_vertices.get(random);
+            }
+            retorno = new Mediana(v.id);
+            retorno.vertice_mediana = v;
+            return retorno;
+        }
+//        static List<Mediana> geraVizinhoTipo2(Solucao solucao){
+//        }
+
         static Solucao cruzar(Solucao solucao1, Solucao solucao2, int tipoCruzamento) {
             ArrayList<Mediana> medianas_cruzadas = null;
             Solucao retorno = null;
