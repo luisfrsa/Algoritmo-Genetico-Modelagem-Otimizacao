@@ -32,8 +32,8 @@ class Main {
 
     static int qdePopulacao = 100;
     static int qdeSorteio = 30;
-    static int pontoParada = 100;
-    static int tipoCruzamento = 0; //0->aleatorio, 1->intersessao*/
+    static int pontoParada = 1000;
+    static int tipoCruzamento = 1; //0->aleatorio, 1->intersessao*/
     static int tipoMutacao = 0; // 0->aleatorio, 1->bits proximos*/
 
     static void debug() {
@@ -253,11 +253,18 @@ class Main {
                 listaDistancias.put(distancia, v);
             }
             for (Map.Entry<Double, Vertice> entry : listaDistancias.entrySet()) {
-                lista_vertices.add(entry.getValue());
-                if (count == 0) {
-                    break;
+                if (entry.getKey() > 0) {
+                    lista_vertices.add(entry.getValue());
+                    if (count == 0) {
+                        break;
+                    }
+                    count--;
                 }
-                count--;
+            }
+            if (lista_vertices.size() == 0) {
+                retorno = new Mediana(m.vertice_mediana.id);
+                retorno.vertice_mediana = m.vertice_mediana;
+                return retorno;
             }
             random = (int) (Math.random() * lista_vertices.size());
             Vertice v = lista_vertices.get(random);
@@ -294,14 +301,82 @@ class Main {
             return retorno;
         }
 
+        static Solucao cruzaMedianasIntersessao(Solucao solucao1, Solucao solucao2) {
+            int tamanho_medianas_solucao = solucao1.medianas.size();
+            Solucao retorno = new Solucao();
+            Solucao sol_temp = new Solucao();
+
+            List<Mediana> lista_med1 = new ArrayList<>();
+            List<Mediana> lista_med2 = new ArrayList<>();
+            List<Mediana> lista_med_intersecao = new ArrayList<>();
+            List<Mediana> lista_med_desjn = new ArrayList<>();
+            Mediana m1;
+            Mediana m2;
+            for (int i = 0; i < solucao1.medianas.size(); i++) {
+                sol_temp.medianas.add(new Mediana(solucao1.medianas.get(i)));
+                sol_temp.medianas.add(new Mediana(solucao2.medianas.get(i)));
+            }
+            Collections.shuffle(sol_temp.medianas);
+            for (int i = 0; i < sol_temp.medianas.size(); i++) {
+                m1 = sol_temp.medianas.get(i);
+                if (!retorno.containsV(m1.vertice_mediana)) {
+                    retorno.medianas.add(m1);
+                }
+//                sol_temp.medianas.remove(i);
+                if (retorno.medianas.size() >= solucao1.medianas.size()) {
+                    break;
+                }
+            }
+            if (true) {
+                return retorno;
+            }
+
+            while (retorno.medianas.size() < solucao1.medianas.size()) {
+            }
+            for (int i = 0; i < lista_med1.size(); i++) {
+                m1 = lista_med1.get(i);
+                for (int j = 0; j < lista_med2.size(); j++) {
+                    m2 = lista_med2.get(j);
+                    if (lista_med_intersecao.contains(m2)) {
+                        lista_med_intersecao.add(m1);
+                    } else {
+                        lista_med_desjn.add(m2);
+                        lista_med2.remove(j);
+                    }
+                }
+            }
+            for (int j = 0; j < lista_med2.size(); j++) {
+                m2 = lista_med2.get(j);
+                lista_med_desjn.add(m2);
+            }
+            System.out.println("lista_med_intersecao  '' " + lista_med_intersecao.size());
+            System.out.println("lista_med_desjn ''" + lista_med_desjn.size());
+            Collections.shuffle(lista_med_desjn);
+            for (int j = 0; j < lista_med_desjn.size(); j++) {
+                lista_med_intersecao.add(lista_med_desjn.get(j));
+                lista_med_desjn.remove(j);
+                if (lista_med_intersecao.size() >= solucao1.medianas.size()) {
+                    System.out.println("lista_med_intersecao " + lista_med_intersecao.size());
+                    System.out.println("solucao1 " + solucao1.medianas.size());
+                    System.out.println("Break");
+                    break;
+                }
+            }
+            System.out.println("lista_med_intersecaoggg " + lista_med_intersecao.size());
+            System.out.println("solucaogggg " + solucao1.medianas.size());
+            retorno.medianas = lista_med_intersecao;
+            retorno.calculaCusto();
+            return retorno;
+        }
+
         static Solucao cruzaMedianasBitsAleatorios(Solucao solucao1, Solucao solucao2) {
             int tamanho_medianas_solucao = solucao1.medianas.size();
             Solucao sol_temp = new Solucao();
-//            int i = (int) Math.floor(Math.random() * 2);
             Solucao retorno1 = new Solucao();
+            Solucao retorno2 = new Solucao();
             Mediana m1;
             Mediana m2;
-            for (int i = 0; i <= solucao1.medianas.size() - 1; i++) {
+            for (int i = 0; i < solucao1.medianas.size(); i++) {
                 m1 = solucao1.medianas.get(i);
                 m2 = solucao2.medianas.get(i);
                 if (!sol_temp.containsV(m1.vertice_mediana)) {
@@ -312,9 +387,8 @@ class Main {
                 }
             }
             Collections.shuffle(sol_temp.medianas);
-            Solucao retorno2 = new Solucao();
             int j = sol_temp.medianas.size() - 1;
-            for (int i = 0; i <= solucao1.medianas.size() - 1; i++) {
+            for (int i = 0; i < solucao1.medianas.size(); i++) {
                 retorno1.medianas.add(sol_temp.medianas.get(i));
                 retorno2.medianas.add(sol_temp.medianas.get(j));
                 j--;
@@ -323,36 +397,31 @@ class Main {
             retorno1.calculaCusto();
             retorno2.calculaCusto();
 
-//            System.out.println("s1 -> " + solucao1.custo);
-//            System.out.println("s2 -> " + solucao2.custo);
-//            System.out.println("r1 -> " + retorno1.custo);
-//            System.out.println("r2 -> " + retorno2.custo);
             if (retorno1.custo < retorno2.custo) {
                 return retorno1;
             }
             return retorno2;
         }
 
-        static ArrayList<Mediana> cruzaMedianasBitsAleatorios_old(Solucao solucao1, Solucao solucao2) {
-            int tamanho_medianas_solucao = solucao1.medianas.size();
-            int random;
-            ArrayList<ArrayList<Mediana>> intersessaoDisjuncao = solucao1.intersessaoDesjuncao(solucao2);
-            ArrayList<Mediana> novas_medianas = new ArrayList<>();
-            ArrayList<Mediana> merge_medianas = new ArrayList<>(solucao1.medianas);
-            merge_medianas.removeAll(solucao2.medianas);
-            merge_medianas.addAll(solucao2.medianas);
-            Mediana medianaAdd;
-            int tamanho_novas = 0;
-            while (tamanho_novas < tamanho_medianas_solucao) {
-                random = (int) (Math.random() * merge_medianas.size());
-                medianaAdd = new Mediana(merge_medianas.get(random));
-                novas_medianas.add(medianaAdd);
-                merge_medianas.remove(random);
-                tamanho_novas++;
-            }
-            return novas_medianas;
-        }
-
+//        static ArrayList<Mediana> cruzaMedianasBitsAleatorios_old(Solucao solucao1, Solucao solucao2) {
+//            int tamanho_medianas_solucao = solucao1.medianas.size();
+//            int random;
+//            ArrayList<ArrayList<Mediana>> intersessaoDisjuncao = solucao1.intersessaoDesjuncao(solucao2);
+//            ArrayList<Mediana> novas_medianas = new ArrayList<>();
+//            ArrayList<Mediana> merge_medianas = new ArrayList<>(solucao1.medianas);
+//            merge_medianas.removeAll(solucao2.medianas);
+//            merge_medianas.addAll(solucao2.medianas);
+//            Mediana medianaAdd;
+//            int tamanho_novas = 0;
+//            while (tamanho_novas < tamanho_medianas_solucao) {
+//                random = (int) (Math.random() * merge_medianas.size());
+//                medianaAdd = new Mediana(merge_medianas.get(random));
+//                novas_medianas.add(medianaAdd);
+//                merge_medianas.remove(random);
+//                tamanho_novas++;
+//            }
+//            return novas_medianas;
+//        }
         static void calculaDistanciasVertices() {
             Vertice v1;
             Double distancia;
@@ -376,26 +445,6 @@ class Main {
 //                }
 //            }
 
-        }
-
-        static Solucao cruzaMedianasIntersessao(Solucao solucao1, Solucao solucao2) {
-            int tamanho_medianas_solucao = solucao1.medianas.size();
-            int random;
-            ArrayList<ArrayList<Mediana>> intersessaoDisjuncao = solucao1.intersessaoDesjuncao(solucao2);
-            ArrayList<Mediana> novas_medianas = intersessaoDisjuncao.get(0);
-            ArrayList<Mediana> desjuncao_medianas = intersessaoDisjuncao.get(1);
-
-            int tamanho_novas = novas_medianas.size();
-            while (tamanho_novas < tamanho_medianas_solucao) {
-                random = (int) (Math.random() * desjuncao_medianas.size());
-                novas_medianas.add(desjuncao_medianas.get(random));
-                desjuncao_medianas.remove(random);
-                tamanho_novas++;
-            }
-            Solucao s = new Solucao();
-            s.medianas = novas_medianas;
-//            s.calculaCusto();
-            return s;
         }
 
         static Solucao mutacao_aleatoria(Solucao solucao, int taxa_mucacao, int qde_bits) {
@@ -573,54 +622,53 @@ class Main {
 //            System.out.println(" numero de vertices2 " + countVertice);
         }
 
-        ArrayList<ArrayList<Mediana>> intersessaoDesjuncao(Solucao other) {
-            ArrayList<ArrayList<Mediana>> retorno = new ArrayList<>();
-            ArrayList<Mediana> intersessao = new ArrayList<>();
-            ArrayList<Mediana> desjuncao = new ArrayList<>();
-            ArrayList<Mediana> thisM = new ArrayList<>(this.medianas.size());
-            ArrayList<Mediana> otherM = new ArrayList<>(other.medianas.size());
-
-            for (Mediana m1 : this.medianas) {
-                thisM.add(new Mediana(m1));
-            }
-            for (Mediana m2 : other.medianas) {
-                otherM.add(new Mediana(m2));
-            }
-//        for (Mediana m1 : thisM) {
-//            for (Mediana m2 : otherM) {
-//                if (m1.vertice_mediana.id == m2.vertice_mediana.id) {
-//                    System.out.println("Entrou");
-//                    intersessao.add(m1);
+//        ArrayList<ArrayList<Mediana>> intersessaoDesjuncao(Solucao other) {
+//            ArrayList<ArrayList<Mediana>> retorno = new ArrayList<>();
+//            ArrayList<Mediana> intersessao = new ArrayList<>();
+//            ArrayList<Mediana> desjuncao = new ArrayList<>();
+//            ArrayList<Mediana> thisM = new ArrayList<>(this.medianas.size());
+//            ArrayList<Mediana> otherM = new ArrayList<>(other.medianas.size());
+//
+//            for (Mediana m1 : this.medianas) {
+//                thisM.add(new Mediana(m1));
+//            }
+//            for (Mediana m2 : other.medianas) {
+//                otherM.add(new Mediana(m2));
+//            }
+////        for (Mediana m1 : thisM) {
+////            for (Mediana m2 : otherM) {
+////                if (m1.vertice_mediana.id == m2.vertice_mediana.id) {
+////                    System.out.println("Entrou");
+////                    intersessao.add(m1);
+////                }
+////            }
+////        }
+//            for (int i = 0; i >= thisM.size() - 1; i++) {
+//                for (int j = 0; j >= otherM.size() - 1; j++) {
+////                System.out.println(thisM.get(i).vertice_mediana.id + " - " + otherM.get(j).vertice_mediana.id);
+//                    if (thisM.get(i).vertice_mediana.id == otherM.get(j).vertice_mediana.id) {
+////                    System.out.println("Entrou!");
+//                        intersessao.add(thisM.get(i));
+//                        thisM.remove(thisM.get(i));
+//                        otherM.remove(otherM.get(j));
+//                    }
 //                }
 //            }
+//
+//            for (Mediana m1 : thisM) {
+////            System.out.println("addedendo1-> " + m1.vertice_mediana.id);
+////            System.out.println("size 1 -> " + desjuncao.size());
+//                desjuncao.add(m1);
+//            }
+//            for (Mediana m2 : otherM) {
+////            System.out.println("addedendo2-> " + m2.vertice_mediana.id);
+////            System.out.println("size 2 -> " + desjuncao.size());
+//                desjuncao.add(m2);
+//            }
+//            retorno.add(intersessao);
+//            retorno.add(desjuncao);
+//            return retorno;
 //        }
-            for (int i = 0; i >= thisM.size() - 1; i++) {
-                for (int j = 0; j >= otherM.size() - 1; j++) {
-//                System.out.println(thisM.get(i).vertice_mediana.id + " - " + otherM.get(j).vertice_mediana.id);
-                    if (thisM.get(i).vertice_mediana.id == otherM.get(j).vertice_mediana.id) {
-//                    System.out.println("Entrou!");
-                        intersessao.add(thisM.get(i));
-                        thisM.remove(thisM.get(i));
-                        otherM.remove(otherM.get(j));
-                    }
-                }
-            }
-
-            for (Mediana m1 : thisM) {
-//            System.out.println("addedendo1-> " + m1.vertice_mediana.id);
-//            System.out.println("size 1 -> " + desjuncao.size());
-                desjuncao.add(m1);
-            }
-            for (Mediana m2 : otherM) {
-//            System.out.println("addedendo2-> " + m2.vertice_mediana.id);
-//            System.out.println("size 2 -> " + desjuncao.size());
-                desjuncao.add(m2);
-            }
-            retorno.add(intersessao);
-            retorno.add(desjuncao);
-            return retorno;
-        }
-
         boolean containsV(Vertice v) {
 //        System.out.println("ContainsV" + v);
             if (v == null) {
@@ -685,6 +733,16 @@ class Main {
             this.id = m.id;
             this.vertice_mediana = m.vertice_mediana;
             this.demanda_atual = 0;
+        }
+
+        boolean containsV(Vertice v) {
+            if (v == null) {
+                return true;
+            }
+            if (this.id == v.id) {
+                return true;
+            }
+            return false;
         }
 
         @Override
