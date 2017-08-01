@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -28,12 +27,12 @@ class Main {
     static int quantidade_mutacao = 0;
     static int qdePecas = 0;
     static int qdeMedianas = 0;
-
-    static int qdePopulacao = 1000;
-    static int taxaMutacao = 3;
     static int bitsMutacao = 2;
+    static int taxaMutacao = 3;
+
+    static int qdePopulacao = 100;
     static int qdeSorteio = 30;
-    static int pontoParada = 1000;
+    static int pontoParada = 100;
     static int tipoCruzamento = 0; //0->aleatorio, 1->intersessao*/
     static int tipoMutacao = 0; // 0->aleatorio, 1->bits proximos*/
 
@@ -92,11 +91,13 @@ class Main {
             solucao1 = Genetico.torneio(listaSolucoes, qdeSorteio);
             solucao2 = Genetico.torneio(listaSolucoes, qdeSorteio);
             if (solucao1.custo == solucao2.custo) {
+//                System.out.println("solucoes iguais");
                 continue;
             }
             nova_solucao = Genetico.cruzar(solucao1, solucao2, tipoCruzamento);
 //            nova_solucao.verificaMedianasRepetidas();
             nova_solucao = Genetico.mutacao(nova_solucao, taxaMutacao, bitsMutacao);
+            nova_solucao = Genetico.buscaVizinhanca(nova_solucao);
 //            nova_solucao.verificaMedianasRepetidas();
             if (nova_solucao.custo < listaSolucoes.lastEntry().getKey() && !listaSolucoes.containsKey(nova_solucao.custo)) {
                 if (nova_solucao.custo < listaSolucoes.firstEntry().getKey() && Main.run_codes == 0) {
@@ -154,23 +155,33 @@ class Main {
 
     private static class Genetico {
 
-        static Solucao buscaLocal(Solucao solucao) {
-            Genetico.getMelhorVizinhoTipo1(solucao);
-            return solucao;
+        static Solucao buscaVizinhanca(Solucao solucao) {
+            int tipo = 1;// maneiras 1 e 0 de gerar vizinhos
+            int nivel = 3;//profundidade de vizinho
+            int encontrou_vizinho;
+            Solucao melhor_vizinho = solucao;
+            Solucao vizinho = null;
+            while (nivel > 1) {
+                encontrou_vizinho = 0;
+                for (int a = (tipo + 1); a > 0; a--) {
+                    vizinho = Genetico.getMelhorVizinho(melhor_vizinho, a, 5);
+                    if (melhor_vizinho.custo > vizinho.custo) {
+                        encontrou_vizinho = 1;
+                        melhor_vizinho = vizinho;
+//                        return melhor_vizinho;
+                    }
+                }
+                if (encontrou_vizinho == 0) {
+                    return melhor_vizinho;
+                }
+                nivel--;
+            }
+            return melhor_vizinho;
         }
 
-        /**
-         * Dada uma solucao S, gerar N vizinhos onde e trocada uma mediana 1 vez
-         * para cada vizinho, de maneira que esta mediana seja removida e subs
-         * tituida por um de seus vértices ligados. Este vertice e substituido
-         * aleatoriamente se tipo=0, Este vertice e substituido aleatoriamente
-         * dentre os N mais próximos se tipo=1,
-         */
         static Solucao getMelhorVizinho(Solucao solucao, int tipo, int N) {
-            List<Mediana> listaM = new ArrayList<>();
             int size = solucao.medianas.size();
-            List<Solucao> vizinhos = new ArrayList<>();
-            Solucao melhor_vizinho = null;
+            Solucao melhor_vizinho = solucao;
             Solucao vizinho;
             int j;
             for (int i = 0; i < size; i++) {
@@ -178,7 +189,7 @@ class Main {
                 j = 0;
                 for (Mediana m : solucao.medianas) {
                     if (i == j) {
-                        if (tipo == 0) {
+                        if (tipo == 1) {
                             vizinho.medianas.add(Genetico.getMelhorVizinhoTipo1(solucao, m));
                         } else {
                             vizinho.medianas.add(Genetico.getMelhorVizinhoTipo2(solucao, m, N));
@@ -189,44 +200,77 @@ class Main {
                     j++;
                 }
                 vizinho.calculaCusto();
-                if (melhor_vizinho == null || melhor_vizinho.custo > vizinho.custo) {
-                    melhor_vizinho = vizinho;
+                if (melhor_vizinho.custo > vizinho.custo) {
+                    return vizinho;
                 }
             }
-            return melhor_vizinho;
+            return solucao;
         }
 
+        /**
+         * Dada uma solucao S, gerar N vizinhos onde e trocada uma mediana 1 vez
+         * para cada vizinho, de maneira que esta mediana seja removida e subs
+         * tituida por um de seus vértices ligados. Este vertice e substituido
+         * aleatoriamente se tipo=0, Este vertice e substituido aleatoriamente
+         * dentre os N mais próximos se tipo=1,
+         */
         static Mediana getMelhorVizinhoTipo1(Solucao solucao, Mediana m) {
             int random;
+            int count = 0;
             Mediana retorno;
-            random = (int) (Math.random() * m.lista_vertices.size());
-            Vertice v = m.lista_vertices.get(random);
+            List<Vertice> lista_vertices = new ArrayList<>();
+            for (Vertice v : m.lista_vertices) {
+                lista_vertices.add(v);
+            }
+            random = (int) (Math.random() * lista_vertices.size());
+            Vertice v = lista_vertices.get(random);
             while (solucao.containsV(v)) {
-                random = (int) (Math.random() * m.lista_vertices.size());
-                v = m.lista_vertices.get(random);
+                if (count > 3 || lista_vertices.size() <= 1) {
+                    retorno = new Mediana(m.vertice_mediana.id);
+                    retorno.vertice_mediana = m.vertice_mediana;
+                    return retorno;
+                }
+                random = (int) (Math.random() * lista_vertices.size());
+                v = lista_vertices.get(random);
+                lista_vertices.remove(random);
+                count++;
             }
             retorno = new Mediana(v.id);
             retorno.vertice_mediana = v;
+
             return retorno;
         }
 
         static Mediana getMelhorVizinhoTipo2(Solucao solucao, Mediana m, int taxaQde) {
             int random;
+            int count = taxaQde;
             TreeMap<Double, Vertice> listaDistancias = new TreeMap<>();
-            for(Vertice v : m.lista_vertices){
-            listaDistancias.put(Double.NaN, v);
-            estou aqui, colocar dentro o treemap, ordenar e retornar
-                    fazer best improvement na funcao pai, de maneira que retorna assim
-                            que encontrar um sucessor melhor.;
-pensar se inverter a ordem do tipo 1 ou 2, tendo em vista que 2 é melhor, porem mais custoso
-        talvez manter a ordem
-            }
+            List<Vertice> lista_vertices = new ArrayList<>();
             Mediana retorno;
-            random = (int) (Math.random() * m.lista_vertices.size());
-            Vertice v = m.lista_vertices.get(random);
+            Double distancia;
+            for (Vertice v : m.lista_vertices) {
+                distancia = v.calculaDistanciaVertices(m.vertice_mediana);
+                listaDistancias.put(distancia, v);
+            }
+            for (Map.Entry<Double, Vertice> entry : listaDistancias.entrySet()) {
+                lista_vertices.add(entry.getValue());
+                if (count == 0) {
+                    break;
+                }
+                count--;
+            }
+            random = (int) (Math.random() * lista_vertices.size());
+            Vertice v = lista_vertices.get(random);
             while (solucao.containsV(v)) {
-                random = (int) (Math.random() * m.lista_vertices.size());
-                v = m.lista_vertices.get(random);
+                if (count > 3 || lista_vertices.size() <= 1) {
+                    retorno = new Mediana(m.vertice_mediana.id);
+                    retorno.vertice_mediana = m.vertice_mediana;
+                    return retorno;
+                }
+                random = (int) (Math.random() * lista_vertices.size());
+                v = lista_vertices.get(random);
+                lista_vertices.remove(random);
+                count++;
             }
             retorno = new Mediana(v.id);
             retorno.vertice_mediana = v;
