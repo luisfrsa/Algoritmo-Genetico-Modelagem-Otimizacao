@@ -35,7 +35,7 @@ class Main {
 
     static int qdePopulacao = 100;
     static int qdeSorteio = Main.qdePopulacao / 10;
-    static int pontoParada = 200;
+    static int pontoParada = 50;
     static int tipoCruzamento = 0; //0->aleatorio, 1->intersessao*/
     static int tipoMutacao = 0; // 0->aleatorio, 1->bits proximos*/
 
@@ -85,8 +85,15 @@ class Main {
         }
     }
 
-    static public void executaAlgoritmo(String arquivo_lido) throws IOException {
+    static public void zeraStatic() {
+        listaVertices = new TreeMap<>();
+        arrayListaVertices = new ArrayList<>();
+        listaSolucoes = new TreeMap<>();
+        rand = new Random(System.currentTimeMillis());
+    }
 
+    static public void executaAlgoritmo(String arquivo_lido) throws IOException {
+        zeraStatic();
         long time_init = System.currentTimeMillis();
         String nome_arquivo_log = String.valueOf(time_init);
         Leitura leitura = new Leitura();
@@ -166,10 +173,11 @@ class Main {
             relatorio.escreve_log(nome_arquivo_log, "Tempo para encontrar melhor solucao local: " + ((System.currentTimeMillis() - time_init) / 1000) + "s ");
             relatorio.escreve_log(nome_arquivo_log, "Memoria usada->" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (double) (1024 * 1024)));
             relatorio.escreve_log(nome_arquivo_log, ".::Melhor solucao::. " + listaSolucoes.firstEntry().getKey());
-            relatorio.geraRelatorio(nome_arquivo_log);
+            relatorio.geraRelatorio(nome_arquivo_log, arquivo_lido.replace(".txt", ""));
         }
         if (Main.run_codes == 1) {
             System.out.println(listaSolucoes.lastEntry().getKey());
+
         }
     }
 
@@ -182,7 +190,7 @@ class Main {
         }
 
         void escreve_log(String nome_arq, String str) throws IOException {
-            File file = new File(System.getProperty("user.dir") + "\\log_" + nome_arq + ".txt");
+            File file = new File(System.getProperty("user.dir") + "/log/log_" + nome_arq + ".txt");
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -192,24 +200,24 @@ class Main {
             bw.close();
         }
 
-        void geraRelatorio(String nome_arq) throws IOException {
-            System.out.println("Iniciando escrita relatorio");
+        void geraRelatorio(String nome_arq, String caso) throws IOException {
+//            System.out.println("Iniciando escrita relatorio");
             String strprint = "var geneticData_" + nome_arq + " = [[" + nome_arq + "],";
             for (Map.Entry<Integer, Double> entry : iteracoes.entrySet()) {
                 strprint += "[" + entry.getKey() + "," + entry.getValue() + "],";
             }
             strprint += "];\n";
-            strprint += "geneticData.push(geneticData_" + nome_arq + ");\n\n";
-            escreveRelatorioJs(strprint);
-            System.out.println("Fim escrita relatorio");
+            strprint += "geneticData_" + caso + ".push(geneticData_" + nome_arq + ");\n\n";
+            escreveRelatorioJs(strprint, caso);
+//            System.out.println("Fim escrita relatorio");
         }
 
-        void escreveRelatorioJs(String data) throws IOException {
+        void escreveRelatorioJs(String data, String caso) throws IOException {
 //            try (Writer writer = new BufferedWriter(new OutputStreamWriter(
 //                    new FileOutputStream("grafico/data.js"), "utf-8"))) {
 //                writer.write(data);
 //            }
-            File file = new File(System.getProperty("user.dir") + "\\grafico\\data.js");
+            File file = new File(System.getProperty("user.dir") + "/grafico/data_" + caso + ".js");
             if (!file.exists()) {
                 file.createNewFile();
             }
