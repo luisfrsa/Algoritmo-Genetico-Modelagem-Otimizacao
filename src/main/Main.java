@@ -54,36 +54,38 @@ class Main {
 
     static public void main(String[] args) throws IOException {
         String arquivo_lido;
-        arquivo_lido = "caso1.txt";
-        executaAlgoritmo(arquivo_lido, 500, 2000);
-     
+//        arquivo_lido = "caso2.txt";
+//        executaAlgoritmo(arquivo_lido, 500, 100);
+//        if (true) {
+//            return;
+//        }
         for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso1.txt";
-            executaAlgoritmo(arquivo_lido, 500, 2000);
+            executaAlgoritmo(arquivo_lido, 500, 100);
         }
         for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso2.txt";
-            executaAlgoritmo(arquivo_lido, 500, 2000);
+            executaAlgoritmo(arquivo_lido, 500, 100);
         }
 
         for (int i = 0; i <= 10; i++) {
 
             arquivo_lido = "caso3.txt";
-            executaAlgoritmo(arquivo_lido, 500, 2000);
+            executaAlgoritmo(arquivo_lido, 500, 100);
         }
         for (int i = 0; i <= 10; i++) {
 
             arquivo_lido = "caso4.txt";
-            executaAlgoritmo(arquivo_lido, 500, 2000);
+            executaAlgoritmo(arquivo_lido, 500, 100);
         }
         for (int i = 0; i <= 10; i++) {
 
             arquivo_lido = "caso5.txt";
-            executaAlgoritmo(arquivo_lido, 500, 2000);
+            executaAlgoritmo(arquivo_lido, 500, 100);
         }
         for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso6.txt";
-            executaAlgoritmo(arquivo_lido, 500, 2000);
+            executaAlgoritmo(arquivo_lido, 500, 100);
         }
         for (int i = 0; i <= 2; i++) {
             arquivo_lido = "caso7.txt";
