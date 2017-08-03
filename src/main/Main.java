@@ -55,38 +55,47 @@ class Main {
     static public void main(String[] args) throws IOException {
         String arquivo_lido;
         arquivo_lido = "caso1.txt";
-        executaAlgoritmo(arquivo_lido);
-        if (true) {
-            return;
-        }
-        for (int i = 0; i < 3; i++) {
+        executaAlgoritmo(arquivo_lido, 500, 2000);
+     
+        for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso1.txt";
-            executaAlgoritmo(arquivo_lido);
+            executaAlgoritmo(arquivo_lido, 500, 2000);
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso2.txt";
-            executaAlgoritmo(arquivo_lido);
+            executaAlgoritmo(arquivo_lido, 500, 2000);
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i <= 10; i++) {
 
             arquivo_lido = "caso3.txt";
-            executaAlgoritmo(arquivo_lido);
+            executaAlgoritmo(arquivo_lido, 500, 2000);
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i <= 10; i++) {
 
             arquivo_lido = "caso4.txt";
-            executaAlgoritmo(arquivo_lido);
+            executaAlgoritmo(arquivo_lido, 500, 2000);
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i <= 10; i++) {
 
             arquivo_lido = "caso5.txt";
-            executaAlgoritmo(arquivo_lido);
+            executaAlgoritmo(arquivo_lido, 500, 2000);
         }
-        for (int i = 0; i < 3; i++) {
-
+        for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso6.txt";
-            executaAlgoritmo(arquivo_lido);
+            executaAlgoritmo(arquivo_lido, 500, 2000);
+        }
+        for (int i = 0; i <= 2; i++) {
+            arquivo_lido = "caso7.txt";
+            executaAlgoritmo(arquivo_lido, 20, 100);
+        }
+        for (int i = 0; i <= 2; i++) {
+            arquivo_lido = "caso8.txt";
+            executaAlgoritmo(arquivo_lido, 20, 100);
+        }
+        for (int i = 0; i <= 2; i++) {
+            arquivo_lido = "caso9.txt";
+            executaAlgoritmo(arquivo_lido, 20, 100);
         }
     }
 
@@ -97,8 +106,15 @@ class Main {
         rand = new Random(System.currentTimeMillis());
     }
 
-    static public void executaAlgoritmo(String arquivo_lido) throws IOException {
+    static public void setParam(int pop, int parada) {
+        Main.qdePopulacao = pop;
+        Main.qdeSorteio = Main.qdePopulacao / 10;
+        Main.pontoParada = parada;
+    }
+
+    static public void executaAlgoritmo(String arquivo_lido, int pop, int parada) throws IOException {
         zeraStatic();
+        setParam(pop, parada);
         long time_init = System.currentTimeMillis();
         String nome_arquivo_log = String.valueOf(time_init);
         Leitura leitura = new Leitura();
