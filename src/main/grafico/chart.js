@@ -1,8 +1,8 @@
 window.onload = function () {
     for (var a = 1; a <= 9; a++) {
         var data_grafico = window["data_grafico_caso" + a];
-//        console.log(data_grafico);
         if (data_grafico.length > 0) {
+        console.log(data_grafico);
             g = new Dygraph(
                     document.getElementById("graphdiv_caso" + a),
                     data_grafico,

@@ -30,10 +30,10 @@ class Main {
     static int quantidade_mutacao = 0;
     static int qdePecas = 0;
     static int qdeMedianas = 0;
-    static int bitsMutacao = 1;
+    static int bitsMutacao = 2;
     static int taxaMutacao = 5;
 
-    static int qdePopulacao = 100;
+    static int qdePopulacao = 20;
     static int qdeSorteio = Main.qdePopulacao / 10;
     static int pontoParada = 50;
     static int tipoCruzamento = 0; //0->aleatorio, 1->intersessao*/
@@ -283,10 +283,11 @@ class Main {
                 }
                 vizinho.calculaCusto();
                 if (melhor_vizinho.custo > vizinho.custo) {
-                    return vizinho;
+                    melhor_vizinho = vizinho;
+//                    return vizinho;
                 }
             }
-            return solucao;
+            return melhor_vizinho;
         }
 
         /**
