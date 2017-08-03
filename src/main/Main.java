@@ -85,19 +85,19 @@ class Main {
 //        }
         for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso6.txt";
-            executaAlgoritmo(arquivo_lido, 200, 100);
+            executaAlgoritmo(arquivo_lido, 10, 50);
         }
-        for (int i = 0; i <= 2; i++) {
+        for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso7.txt";
-            executaAlgoritmo(arquivo_lido, 20, 100);
+            executaAlgoritmo(arquivo_lido, 10, 50);
         }
-        for (int i = 0; i <= 2; i++) {
+        for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso8.txt";
-            executaAlgoritmo(arquivo_lido, 20, 100);
+            executaAlgoritmo(arquivo_lido, 10, 50);
         }
-        for (int i = 0; i <= 2; i++) {
+        for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso9.txt";
-            executaAlgoritmo(arquivo_lido, 20, 100);
+            executaAlgoritmo(arquivo_lido, 10, 50);
         }
     }
 
@@ -110,7 +110,10 @@ class Main {
 
     static public void setParam(int pop, int parada) {
         Main.qdePopulacao = pop;
-        Main.qdeSorteio = Main.qdePopulacao / 10;
+        Main.qdeSorteio = (int) Math.floor(Main.qdePopulacao / 10);
+        if (Main.qdeSorteio < 2) {
+            Main.qdeSorteio = 2;
+        }
         Main.pontoParada = parada;
     }
 
