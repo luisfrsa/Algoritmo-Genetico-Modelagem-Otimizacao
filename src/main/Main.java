@@ -54,38 +54,38 @@ class Main {
 
     static public void main(String[] args) throws IOException {
         String arquivo_lido;
-        arquivo_lido = "caso2.txt";
-        executaAlgoritmo(arquivo_lido, 20, 100);
-        if (true) {
-            return;
-        }
-        for (int i = 0; i <= 10; i++) {
-            arquivo_lido = "caso1.txt";
-            executaAlgoritmo(arquivo_lido, 20, 100);
-        }
-        for (int i = 0; i <= 10; i++) {
-            arquivo_lido = "caso2.txt";
-            executaAlgoritmo(arquivo_lido, 500, 100);
-        }
-
-        for (int i = 0; i <= 10; i++) {
-
-            arquivo_lido = "caso3.txt";
-            executaAlgoritmo(arquivo_lido, 500, 100);
-        }
-        for (int i = 0; i <= 10; i++) {
-
-            arquivo_lido = "caso4.txt";
-            executaAlgoritmo(arquivo_lido, 500, 100);
-        }
-        for (int i = 0; i <= 10; i++) {
-
-            arquivo_lido = "caso5.txt";
-            executaAlgoritmo(arquivo_lido, 500, 100);
-        }
+//        arquivo_lido = "caso2.txt";
+//        executaAlgoritmo(arquivo_lido, 500, 100);
+//        if (true) {
+//            return;
+//        }
+//        for (int i = 0; i <= 10; i++) {
+//            arquivo_lido = "caso1.txt";
+//            executaAlgoritmo(arquivo_lido, 500, 100);
+//        }
+//        for (int i = 0; i <= 10; i++) {
+//            arquivo_lido = "caso2.txt";
+//            executaAlgoritmo(arquivo_lido, 500, 100);
+//        }
+//
+//        for (int i = 0; i <= 10; i++) {
+//
+//            arquivo_lido = "caso3.txt";
+//            executaAlgoritmo(arquivo_lido, 500, 100);
+//        }
+//        for (int i = 0; i <= 10; i++) {
+//
+//            arquivo_lido = "caso4.txt";
+//            executaAlgoritmo(arquivo_lido, 500, 100);
+//        }
+//        for (int i = 0; i <= 10; i++) {
+//
+//            arquivo_lido = "caso5.txt";
+//            executaAlgoritmo(arquivo_lido, 500, 100);
+//        }
         for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso6.txt";
-            executaAlgoritmo(arquivo_lido, 500, 100);
+            executaAlgoritmo(arquivo_lido, 200, 100);
         }
         for (int i = 0; i <= 2; i++) {
             arquivo_lido = "caso7.txt";
@@ -243,9 +243,6 @@ class Main {
             File file = new File(System.getProperty("user.dir") + "/grafico/data_" + caso + ".js");
             if (!file.exists()) {
                 file.createNewFile();
-                System.out.println("arquivo nao encontrado, criando");
-            } else {
-                System.out.println("Arquivo encontrado");
             }
             FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
             BufferedWriter bw = new BufferedWriter(fw);
