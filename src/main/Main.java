@@ -54,6 +54,11 @@ class Main {
 
     static public void main(String[] args) throws IOException {
         String arquivo_lido;
+        arquivo_lido = "caso1.txt";
+        executaAlgoritmo(arquivo_lido);
+        if (true) {
+            return;
+        }
         for (int i = 0; i < 3; i++) {
             arquivo_lido = "caso1.txt";
             executaAlgoritmo(arquivo_lido);
@@ -231,14 +236,14 @@ class Main {
     private static class Genetico {
 
         static Solucao buscaVizinhanca(Solucao solucao) {
-            int tipo = 1;// maneiras 1 e 0 de gerar vizinhos
+            int tipo = 2;// maneiras 1 e 0 de gerar vizinhos
             int nivel = 3;//profundidade de vizinho
             int encontrou_vizinho;
             Solucao melhor_vizinho = solucao;
             Solucao vizinho = null;
             while (nivel > 1) {
                 encontrou_vizinho = 0;
-                for (int a = (tipo + 1); a > 0; a--) {
+                for (int a = 0; a <= tipo; a++) {
                     vizinho = Genetico.getMelhorVizinho(melhor_vizinho, a, 5);
                     if (melhor_vizinho.custo > vizinho.custo) {
                         encontrou_vizinho = 1;
@@ -266,8 +271,10 @@ class Main {
                     if (i == j) {
                         if (tipo == 1) {
                             vizinho.medianas.add(Genetico.getMelhorVizinhoTipo1(solucao, m));
-                        } else {
+                        } else if (tipo == 2) {
                             vizinho.medianas.add(Genetico.getMelhorVizinhoTipo2(solucao, m, N));
+                        } else {
+                            vizinho.medianas.add(Genetico.getMelhorVizinhoTipo3(solucao, m));
                         }
                     } else {
                         vizinho.medianas.add(new Mediana(m));
@@ -365,8 +372,30 @@ class Main {
             retorno.vertice_mediana = v;
             return retorno;
         }
-//        static List<Mediana> geraVizinhoTipo2(Solucao solucao){
-//        }
+
+        static Mediana getMelhorVizinhoTipo3(Solucao solucao, Mediana m) {
+            int random;
+            int count = 0;
+            Mediana retorno;
+            random = rand.nextInt(arrayListaVertices.size());
+
+            Vertice v = arrayListaVertices.get(random);
+            while (solucao.containsV(v)) {
+                if (count > 3) {
+                    retorno = new Mediana(m.vertice_mediana.id);
+                    retorno.vertice_mediana = m.vertice_mediana;
+                    return retorno;
+                }
+//                random = (int) (Math.random() * lista_vertices.size());
+                random = rand.nextInt(arrayListaVertices.size());
+
+                v = arrayListaVertices.get(random);
+                count++;
+            }
+            retorno = new Mediana(v.id);
+            retorno.vertice_mediana = v;
+            return retorno;
+        }
 
         static Solucao cruzar(Solucao solucao1, Solucao solucao2, int tipoCruzamento) {
             ArrayList<Mediana> medianas_cruzadas = null;
@@ -918,17 +947,6 @@ class Main {
                     }
                 }
             }
-//            System.out.println("Sem medianas com capacidades");
-//            System.out.println("size treemap " + listaDistancias.size());
-//            System.out.println("size " + listaDistancias.size());
-//            for (Map.Entry<Double, List<Mediana>> entry : listaDistancias.entrySet()) {
-//                for (Mediana mediana : entry.getValue()) {
-//                    System.out.println(mediana);
-//                }
-//            }
-//            Main.exit(" Erro! Nao foi encontrada mediana com espaco suficiente para ligar ao vertice");
-//            System.out.println("Nao foi encontrada mediana com espaco suficiente para ligar ao vertice");
-//            return new Mediana(0);
             return null;
         }
 
@@ -937,10 +955,8 @@ class Main {
         }
 
         Double calculaPitagoras(int x1, int x2, int y1, int y2) {
-
             Double retorno = Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
             return retorno;
-//        return  Math.round(retorno * 100);
         }
 
         @Override
@@ -1080,8 +1096,8 @@ class Main {
         }
 
         TreeMap<Integer, List<Vertice>> readFilegg(String arquivo) throws IOException {
-//            TreeMap<Integer, List<Vertice>> listaV = new TreeMap<>(Collections.reverseOrder());
-            TreeMap<Integer, List<Vertice>> listaV = new TreeMap<>();
+            TreeMap<Integer, List<Vertice>> listaV = new TreeMap<>(Collections.reverseOrder());
+//            TreeMap<Integer, List<Vertice>> listaV = new TreeMap<>();
             ArrayList<Vertice> arrayV = new ArrayList<>();
             String content = new String(Files.readAllBytes(Paths.get(arquivo)));
             String lines[] = content.split("[\\r\\n]+");
