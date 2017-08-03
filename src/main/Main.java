@@ -236,14 +236,14 @@ class Main {
     private static class Genetico {
 
         static Solucao buscaVizinhanca(Solucao solucao) {
-            int tipo = 2;// maneiras 1 e 0 de gerar vizinhos
+            int tipo = 3;// maneiras 1 e 0 de gerar vizinhos
             int nivel = 3;//profundidade de vizinho
             int encontrou_vizinho;
             Solucao melhor_vizinho = solucao;
             Solucao vizinho = null;
             while (nivel > 1) {
                 encontrou_vizinho = 0;
-                for (int a = 0; a <= tipo; a++) {
+                for (int a = 1; a <= tipo; a++) {
                     vizinho = Genetico.getMelhorVizinho(melhor_vizinho, a, 5);
                     if (melhor_vizinho.custo > vizinho.custo) {
                         encontrou_vizinho = 1;
@@ -261,6 +261,7 @@ class Main {
 
         static Solucao getMelhorVizinho(Solucao solucao, int tipo, int N) {
             int size = solucao.medianas.size();
+
             Solucao melhor_vizinho = solucao;
             Solucao vizinho;
             int j;
@@ -935,7 +936,6 @@ class Main {
                 }
                 listaDistancias = CustomTreeMap.addTreemap(listaDistancias, distancia, mediana);
             }
-
             for (Map.Entry<Double, List<Mediana>> entry : listaDistancias.entrySet()) {
                 for (Mediana mediana : entry.getValue()) {
                     capacidade_mediana = mediana.vertice_mediana.capacidade;
