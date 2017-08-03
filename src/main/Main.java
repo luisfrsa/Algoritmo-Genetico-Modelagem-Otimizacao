@@ -61,7 +61,7 @@ class Main {
 //        }
         for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso1.txt";
-            executaAlgoritmo(arquivo_lido, 500, 100);
+            executaAlgoritmo(arquivo_lido, 20, 100);
         }
         for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso2.txt";
