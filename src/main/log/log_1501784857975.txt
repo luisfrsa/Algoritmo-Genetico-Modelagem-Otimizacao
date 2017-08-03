@@ -1,0 +1,35 @@
+Arquivo de Log log_1501784857975.txt
+Teste caso4.txt
+Parametros: 
+Tamanho da populacao 500
+Quantidade de solucoes para sorteio 50
+Tipo de cruzamento 0
+Taxa de mutacao 5
+Quantidade de bits de mutacao 2
+Quantidade de iteracoes s/ melhoria para parada 100
+Tempo de leitura da entrada: 0s 
+Calculando distancia vertices: 0s 
+Tempo para gerar populacao inicial aleatoria: 0s 
+0 Tamanho-> 500 - Melhor-> 1396.4062314335652 Pior-> 4133.190180587284
+1 Tamanho-> 500 - Melhor-> 1186.536053108568 Pior-> 3714.0961328779863
+4 Tamanho-> 500 - Melhor-> 1126.4423958166838 Pior-> 3510.011043451878
+14 Tamanho-> 500 - Melhor-> 1095.3810354923176 Pior-> 3168.943930226228
+15 Tamanho-> 500 - Melhor-> 1061.7032223203128 Pior-> 3164.3240304216656
+18 Tamanho-> 500 - Melhor-> 1048.7884926831514 Pior-> 3140.3734104885166
+36 Tamanho-> 500 - Melhor-> 1041.9666234045255 Pior-> 2933.2968534787224
+67 Tamanho-> 500 - Melhor-> 1037.914483097487 Pior-> 2710.9606519042945
+77 Tamanho-> 500 - Melhor-> 1035.067519350271 Pior-> 2642.2181331628485
+107 Tamanho-> 500 - Melhor-> 1023.1612609260944 Pior-> 2533.4617263240816
+113 Tamanho-> 500 - Melhor-> 1021.1506025129486 Pior-> 2520.808566250943
+116 Tamanho-> 500 - Melhor-> 1018.7676403033602 Pior-> 2502.4970835977565
+123 Tamanho-> 500 - Melhor-> 1017.7588433404521 Pior-> 2481.7003156577025
+144 Tamanho-> 500 - Melhor-> 1014.7770617219621 Pior-> 2406.1915502494894
+212 Tamanho-> 500 - Melhor-> 1007.0953859120314 Pior-> 2227.015744105039
+227 Tamanho-> 500 - Melhor-> 1005.993790069414 Pior-> 2190.9004635523593
+240 Tamanho-> 500 - Melhor-> 1004.0032071916087 Pior-> 2153.672810083015
+259 Tamanho-> 500 - Melhor-> 1002.5540577837114 Pior-> 2115.8942689641112
+269 Tamanho-> 500 - Melhor-> 1002.414543173575 Pior-> 2085.9022261507694
+281 Tamanho-> 500 - Melhor-> 1000.2545592215382 Pior-> 2061.1567370966904
+Tempo para encontrar melhor solucao local: 102s 
+Memoria usada->3345.612953186035
+.::Melhor solucao::. 999.1741109237415
