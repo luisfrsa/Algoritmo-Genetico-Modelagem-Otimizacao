@@ -243,6 +243,9 @@ class Main {
             File file = new File(System.getProperty("user.dir") + "/grafico/data_" + caso + ".js");
             if (!file.exists()) {
                 file.createNewFile();
+                System.out.println("arquivo nao encontrado, criando");
+            } else {
+                System.out.println("Arquivo encontrado");
             }
             FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
             BufferedWriter bw = new BufferedWriter(fw);
