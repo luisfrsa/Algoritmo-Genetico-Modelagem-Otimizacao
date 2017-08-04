@@ -54,11 +54,13 @@ class Main {
 
     static public void main(String[] args) throws IOException {
         String arquivo_lido;
-//        arquivo_lido = "caso2.txt";
-//        executaAlgoritmo(arquivo_lido, 500, 100);
-//        if (true) {
-//            return;
-//        }
+        Scanner scan;
+        scan = new Scanner(System.in);
+        arquivo_lido = scan.nextLine();
+        executaAlgoritmo("caso" + arquivo_lido + ".txt", 10, 50);
+        if (true) {
+            return;
+        }
 //        for (int i = 0; i <= 10; i++) {
 //            arquivo_lido = "caso1.txt";
 //            executaAlgoritmo(arquivo_lido, 500, 100);
