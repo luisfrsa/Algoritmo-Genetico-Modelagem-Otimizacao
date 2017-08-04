@@ -1,0 +1,17 @@
+Arquivo de Log log_1501852663903.txt
+Teste caso7.txt
+Parametros: 
+Tamanho da populacao 10
+Quantidade de solucoes para sorteio 2
+Tipo de cruzamento 0
+Taxa de mutacao 5
+Quantidade de bits de mutacao 2
+Quantidade de iteracoes s/ melhoria para parada 50
+Tempo de leitura da entrada: 0s 
+Calculando distancia vertices: 0s 
+Tempo para gerar populacao inicial aleatoria: 15s 
+3 Tamanho-> 10 - Melhor-> 181813.38598926316 Pior-> 196476.21040892042
+4 Tamanho-> 10 - Melhor-> 181581.07083161033 Pior-> 190124.2705773942
+6 Tamanho-> 10 - Melhor-> 180805.27442670573 Pior-> 189444.35067967046
+7 Tamanho-> 10 - Melhor-> 178035.08155897196 Pior-> 187553.22036110391
+10 Tamanho-> 10 - Melhor-> 177645.56361607453 Pior-> 184458.54233690313
