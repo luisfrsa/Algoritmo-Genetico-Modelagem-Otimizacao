@@ -31,3 +31,4 @@ Tempo para gerar populacao inicial aleatoria: 14s
 353 Tamanho-> 10 - Melhor-> 148818.51965370015 Pior-> 151491.2475381172
 393 Tamanho-> 10 - Melhor-> 148466.88091664773 Pior-> 150226.07613973122
 423 Tamanho-> 10 - Melhor-> 148276.07086879874 Pior-> 149195.91723935585
+513 Tamanho-> 10 - Melhor-> 147200.32381703675 Pior-> 148742.7942268231
