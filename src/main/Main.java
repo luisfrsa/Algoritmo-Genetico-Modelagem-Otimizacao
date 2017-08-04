@@ -30,7 +30,7 @@ class Main {
     static int quantidade_mutacao = 0;
     static int qdePecas = 0;
     static int qdeMedianas = 0;
-    static int bitsMutacao = 2;
+    static int bitsMutacao = 100;
     static int taxaMutacao = 5;
     
     static int qdePopulacao = 20;
