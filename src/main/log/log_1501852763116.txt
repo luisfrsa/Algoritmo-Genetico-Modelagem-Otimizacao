@@ -12,3 +12,6 @@ Calculando distancia vertices: 0s
 Tempo para gerar populacao inicial aleatoria: 20s 
 3 Tamanho-> 10 - Melhor-> 190017.00303712356 Pior-> 204817.91041091003
 6 Tamanho-> 10 - Melhor-> 181858.06704155423 Pior-> 203434.45680205425
+16 Tamanho-> 10 - Melhor-> 180016.82593289443 Pior-> 189475.50118789668
+19 Tamanho-> 10 - Melhor-> 179492.98814835926 Pior-> 188756.13314152873
+29 Tamanho-> 10 - Melhor-> 175736.57720543593 Pior-> 183051.83558962497
