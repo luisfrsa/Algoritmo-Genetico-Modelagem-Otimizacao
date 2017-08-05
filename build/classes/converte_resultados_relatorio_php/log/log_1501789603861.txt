@@ -1,0 +1,40 @@
+Arquivo de Log log_1501789603861.txt
+Teste caso5.txt
+Parametros: 
+Tamanho da populacao 500
+Quantidade de solucoes para sorteio 50
+Tipo de cruzamento 0
+Taxa de mutacao 5
+Quantidade de bits de mutacao 2
+Quantidade de iteracoes s/ melhoria para parada 100
+Tempo de leitura da entrada: 0s 
+Calculando distancia vertices: 0s 
+Tempo para gerar populacao inicial aleatoria: 0s 
+2 Tamanho-> 500 - Melhor-> 40016.51502026987 Pior-> 157244.59372164763
+3 Tamanho-> 500 - Melhor-> 39646.37380627509 Pior-> 153008.59861532916
+11 Tamanho-> 500 - Melhor-> 38561.50501109892 Pior-> 134166.80898066124
+22 Tamanho-> 500 - Melhor-> 37516.1288581482 Pior-> 120166.6376458212
+51 Tamanho-> 500 - Melhor-> 36805.85505686421 Pior-> 98686.97298411553
+64 Tamanho-> 500 - Melhor-> 36628.07762224239 Pior-> 91980.7199349554
+82 Tamanho-> 500 - Melhor-> 36482.29146615659 Pior-> 86805.71077980769
+98 Tamanho-> 500 - Melhor-> 36470.376353323634 Pior-> 82632.29633942748
+112 Tamanho-> 500 - Melhor-> 35982.44830760491 Pior-> 81021.82965144033
+140 Tamanho-> 500 - Melhor-> 35951.15554376959 Pior-> 75654.85855663544
+149 Tamanho-> 500 - Melhor-> 35498.218306198774 Pior-> 74700.72546043256
+172 Tamanho-> 500 - Melhor-> 35204.63348398238 Pior-> 71995.2680627664
+224 Tamanho-> 500 - Melhor-> 35148.13498919786 Pior-> 66203.69718786157
+248 Tamanho-> 500 - Melhor-> 35073.024834202464 Pior-> 64753.157331080496
+364 Tamanho-> 500 - Melhor-> 34980.15688528066 Pior-> 56813.56860163156
+439 Tamanho-> 500 - Melhor-> 34803.132471960365 Pior-> 51204.04116888943
+456 Tamanho-> 500 - Melhor-> 34709.898745602724 Pior-> 49924.22113979867
+1123 Tamanho-> 500 - Melhor-> 34282.65277614112 Pior-> 36826.11537287763
+1156 Tamanho-> 500 - Melhor-> 34219.29786579521 Pior-> 36767.51274124495
+1488 Tamanho-> 500 - Melhor-> 33951.636347835134 Pior-> 36254.42261351345
+1540 Tamanho-> 500 - Melhor-> 33850.3346973381 Pior-> 36189.444268798135
+2474 Tamanho-> 500 - Melhor-> 33715.739349019736 Pior-> 35207.85708027739
+3368 Tamanho-> 500 - Melhor-> 33686.76143665052 Pior-> 34779.26772904247
+4610 Tamanho-> 500 - Melhor-> 33658.05455213666 Pior-> 34476.807088813766
+4662 Tamanho-> 500 - Melhor-> 33625.99699772844 Pior-> 34464.20160033792
+Tempo para encontrar melhor solucao local: 893s 
+Memoria usada->1052.036392211914
+.::Melhor solucao::. 33578.68903953516

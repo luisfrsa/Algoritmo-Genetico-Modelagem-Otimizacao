@@ -56,8 +56,8 @@ class Main {
         Scanner scan;
         scan = new Scanner(System.in);
         arquivo_lido = scan.nextLine();
-        for (int i = 0; i <= 10; i++) {
-            executaAlgoritmo("caso" + arquivo_lido + ".txt", 200, 150);
+        for (int i = 0; i <= 2; i++) {
+            executaAlgoritmo("caso" + arquivo_lido + ".txt", 10, 50);
         }
         if (true) {
             return;

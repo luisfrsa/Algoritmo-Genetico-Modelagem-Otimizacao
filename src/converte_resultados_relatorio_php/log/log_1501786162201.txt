@@ -1,0 +1,38 @@
+Arquivo de Log log_1501786162201.txt
+Teste caso5.txt
+Parametros: 
+Tamanho da populacao 500
+Quantidade de solucoes para sorteio 50
+Tipo de cruzamento 0
+Taxa de mutacao 5
+Quantidade de bits de mutacao 2
+Quantidade de iteracoes s/ melhoria para parada 100
+Tempo de leitura da entrada: 0s 
+Calculando distancia vertices: 0s 
+Tempo para gerar populacao inicial aleatoria: 0s 
+0 Tamanho-> 500 - Melhor-> 42198.067630322184 Pior-> 166486.0858320265
+2 Tamanho-> 500 - Melhor-> 40089.23634354981 Pior-> 146463.8356662898
+3 Tamanho-> 500 - Melhor-> 39505.533258451884 Pior-> 145502.63137308086
+5 Tamanho-> 500 - Melhor-> 39271.62216208422 Pior-> 143275.133714852
+9 Tamanho-> 500 - Melhor-> 38876.44720148342 Pior-> 130095.62839823935
+16 Tamanho-> 500 - Melhor-> 37680.893989300755 Pior-> 122927.07043306208
+23 Tamanho-> 500 - Melhor-> 36728.88317653658 Pior-> 119292.32491906313
+66 Tamanho-> 500 - Melhor-> 36078.30800386211 Pior-> 94273.64601709293
+118 Tamanho-> 500 - Melhor-> 35762.139435417645 Pior-> 79750.12681660693
+126 Tamanho-> 500 - Melhor-> 35655.107259298835 Pior-> 77835.947638787
+128 Tamanho-> 500 - Melhor-> 35569.988264832864 Pior-> 77674.36652344737
+133 Tamanho-> 500 - Melhor-> 35404.906559817886 Pior-> 77423.52923567865
+145 Tamanho-> 500 - Melhor-> 35096.26628741921 Pior-> 75667.29534727508
+177 Tamanho-> 500 - Melhor-> 34951.65771481611 Pior-> 72204.90314701019
+222 Tamanho-> 500 - Melhor-> 34596.720420616286 Pior-> 67676.2750053853
+255 Tamanho-> 500 - Melhor-> 34575.93060600644 Pior-> 65294.68883869508
+284 Tamanho-> 500 - Melhor-> 34470.34031675853 Pior-> 63557.09389305817
+427 Tamanho-> 500 - Melhor-> 34438.36514087027 Pior-> 53206.169782459285
+625 Tamanho-> 500 - Melhor-> 34293.89859574679 Pior-> 38489.47337832489
+657 Tamanho-> 500 - Melhor-> 34229.95229941849 Pior-> 38171.37417589049
+894 Tamanho-> 500 - Melhor-> 34137.326524230746 Pior-> 36958.12098246226
+3036 Tamanho-> 500 - Melhor-> 34029.158122921435 Pior-> 34957.66895835086
+3497 Tamanho-> 500 - Melhor-> 33779.24466194982 Pior-> 34837.62786497795
+Tempo para encontrar melhor solucao local: 807s 
+Memoria usada->1865.5253524780273
+.::Melhor solucao::. 33688.58340466247
