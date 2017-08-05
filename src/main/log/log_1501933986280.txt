@@ -1,0 +1,26 @@
+Arquivo de Log log_1501933986280.txt
+Teste caso2.txt
+Parametros: 
+SEM BUSCA NA VIZINHANCA
+Tamanho da populacao 200
+Quantidade de solucoes para sorteio 20
+Tipo de cruzamento 0
+Taxa de mutacao 5
+Quantidade de bits de mutacao 100
+Quantidade de iteracoes s/ melhoria para parada 150
+Tempo de leitura da entrada: 0s 
+Calculando distancia vertices: 0s 
+Tempo para gerar populacao inicial aleatoria: 0s 
+36 Tamanho-> 199 - Melhor-> 910.1957067322429 Pior-> 1675.7029450498437
+38 Tamanho-> 199 - Melhor-> 878.1228306296753 Pior-> 1664.9560263703625
+45 Tamanho-> 199 - Melhor-> 873.4396613583939 Pior-> 1647.2568328187863
+69 Tamanho-> 199 - Melhor-> 869.2336409230378 Pior-> 1552.5597547136288
+81 Tamanho-> 199 - Melhor-> 810.6858450997478 Pior-> 1517.9498272188139
+138 Tamanho-> 199 - Melhor-> 802.7587273918466 Pior-> 1324.3637707861092
+282 Tamanho-> 199 - Melhor-> 793.7881382599037 Pior-> 1153.5946289510669
+500 Tamanho-> 199 - Melhor-> 789.6516479455411 Pior-> 1057.7153583800196
+588 Tamanho-> 199 - Melhor-> 789.1851296825185 Pior-> 1039.0965646142135
+1142 Tamanho-> 199 - Melhor-> 784.2697487123621 Pior-> 974.2701158722074
+Tempo para encontrar melhor solucao local: 1s 
+Memoria usada->591.7837295532227
+.::Melhor solucao::. 763.9196494713286
