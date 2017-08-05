@@ -1,0 +1,38 @@
+Arquivo de Log log_1501936738589.txt
+Teste caso8.txt
+Parametros: 
+Tamanho da populacao 10
+Quantidade de solucoes para sorteio 2
+Tipo de cruzamento 0
+Taxa de mutacao 5
+Quantidade de bits de mutacao 100
+Quantidade de iteracoes s/ melhoria para parada 50
+Tempo de leitura da entrada: 0s 
+Calculando distancia vertices: 0s 
+Tempo para gerar populacao inicial aleatoria: 13s 
+2 Tamanho-> 10 - Melhor-> 194742.69564825966 Pior-> 217365.24887921012
+3 Tamanho-> 10 - Melhor-> 192844.9797015981 Pior-> 217112.36101875416
+8 Tamanho-> 10 - Melhor-> 188849.472261515 Pior-> 199275.63638583117
+13 Tamanho-> 10 - Melhor-> 186319.453088524 Pior-> 195445.02720696782
+14 Tamanho-> 10 - Melhor-> 186083.3113826309 Pior-> 194742.69564825966
+15 Tamanho-> 10 - Melhor-> 182329.11424048463 Pior-> 193549.31428702126
+19 Tamanho-> 10 - Melhor-> 180576.081521269 Pior-> 191143.92942509157
+30 Tamanho-> 10 - Melhor-> 180175.47913444246 Pior-> 184788.26006579067
+35 Tamanho-> 10 - Melhor-> 176965.0060983671 Pior-> 182891.58659516674
+38 Tamanho-> 10 - Melhor-> 176096.25972620654 Pior-> 181587.22422991914
+49 Tamanho-> 10 - Melhor-> 176065.03183925743 Pior-> 180175.47913444246
+52 Tamanho-> 10 - Melhor-> 175475.59297907725 Pior-> 179335.24893363458
+69 Tamanho-> 10 - Melhor-> 173916.83211475774 Pior-> 177694.6552762286
+83 Tamanho-> 10 - Melhor-> 173060.5897086651 Pior-> 176263.42702445269
+227 Tamanho-> 10 - Melhor-> 172382.7147223595 Pior-> 174114.49007625628
+233 Tamanho-> 10 - Melhor-> 171892.53863804086 Pior-> 173560.19465115186
+272 Tamanho-> 10 - Melhor-> 170703.6101033817 Pior-> 172892.79104655742
+278 Tamanho-> 10 - Melhor-> 170349.53041467283 Pior-> 172382.7147223595
+283 Tamanho-> 10 - Melhor-> 170342.95981417128 Pior-> 172069.0202717386
+286 Tamanho-> 10 - Melhor-> 168892.7800394953 Pior-> 171908.66298419182
+292 Tamanho-> 10 - Melhor-> 168738.29363711987 Pior-> 170703.6101033817
+319 Tamanho-> 10 - Melhor-> 167006.67261596883 Pior-> 170150.9395007204
+321 Tamanho-> 10 - Melhor-> 166782.41260282838 Pior-> 170035.42099893303
+322 Tamanho-> 10 - Melhor-> 165986.24788896192 Pior-> 170017.9074402149
+367 Tamanho-> 10 - Melhor-> 165202.46351657572 Pior-> 167145.25336923572
+378 Tamanho-> 10 - Melhor-> 164560.38182599907 Pior-> 166867.19432208422
