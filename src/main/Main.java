@@ -134,7 +134,7 @@ class Main {
             relatorio.escreve_log(nome_arquivo_log, "Arquivo de Log log_" + nome_arquivo_log + ".txt");
             relatorio.escreve_log(nome_arquivo_log, "Teste " + arquivo_lido);
             relatorio.escreve_log(nome_arquivo_log, "Parametros: ");
-            relatorio.escreve_log(nome_arquivo_log, "SEM BUSCA NA VIZINHANCA");
+//            relatorio.escreve_log(nome_arquivo_log, "SEM BUSCA NA VIZINHANCA");
             relatorio.escreve_log(nome_arquivo_log, "Tamanho da populacao " + qdePopulacao);
             relatorio.escreve_log(nome_arquivo_log, "Quantidade de solucoes para sorteio " + qdeSorteio);
             relatorio.escreve_log(nome_arquivo_log, "Tipo de cruzamento " + tipoCruzamento);
@@ -159,7 +159,7 @@ class Main {
             Solucao solucao = new Solucao();
             solucao.iniciaPopulacaoAleatoria(qdeMedianas, qdePecas);
             solucao.calculaCusto();
-//            solucao.verificaMedianasRepetidas();
+            solucao.verificaMedianasRepetidas();
             listaSolucoes.put(solucao.custo, solucao);
             size_solucoes++;
         }
