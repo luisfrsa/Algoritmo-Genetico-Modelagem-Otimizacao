@@ -20,7 +20,7 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class Main {
-    
+
     static TreeMap<Integer, List<Vertice>> listaVertices = new TreeMap<>();
     static ArrayList<Vertice> arrayListaVertices = new ArrayList<>();
     static TreeMap<Double, Solucao> listaSolucoes = new TreeMap<>();
@@ -32,7 +32,7 @@ class Main {
     static int qdeMedianas = 0;
     static int bitsMutacao = 100;
     static int taxaMutacao = 5;
-    
+
     static int qdePopulacao = 20;
     static int qdeSorteio = Main.qdePopulacao / 10;
     static int pontoParada = 50;
@@ -42,48 +42,50 @@ class Main {
     static void debug() {
         System.out.println(".::Debug::.");
     }
-    
+
     static void exit() {
         Main.exit("exit");
     }
-    
+
     static void exit(String s) {
         System.out.println(s);
         System.exit(0);
     }
-    
+
     static public void main(String[] args) throws IOException {
         Scanner scan;
         scan = new Scanner(System.in);
         arquivo_lido = scan.nextLine();
-        executaAlgoritmo("caso" + arquivo_lido + ".txt", 10, 50);
+        for (int i = 0; i <= 10; i++) {
+            executaAlgoritmo("caso" + arquivo_lido + ".txt", 200, 150);
+        }
         if (true) {
             return;
         }
-//        for (int i = 0; i <= 10; i++) {
-//            arquivo_lido = "caso1.txt";
-//            executaAlgoritmo(arquivo_lido, 500, 100);
-//        }
-//        for (int i = 0; i <= 10; i++) {
-//            arquivo_lido = "caso2.txt";
-//            executaAlgoritmo(arquivo_lido, 500, 100);
-//        }
-//
-//        for (int i = 0; i <= 10; i++) {
-//
-//            arquivo_lido = "caso3.txt";
-//            executaAlgoritmo(arquivo_lido, 500, 100);
-//        }
-//        for (int i = 0; i <= 10; i++) {
-//
-//            arquivo_lido = "caso4.txt";
-//            executaAlgoritmo(arquivo_lido, 500, 100);
-//        }
-//        for (int i = 0; i <= 10; i++) {
-//
-//            arquivo_lido = "caso5.txt";
-//            executaAlgoritmo(arquivo_lido, 500, 100);
-//        }
+        for (int i = 0; i <= 10; i++) {
+            arquivo_lido = "caso1.txt";
+            executaAlgoritmo(arquivo_lido, 500, 100);
+        }
+        for (int i = 0; i <= 10; i++) {
+            arquivo_lido = "caso2.txt";
+            executaAlgoritmo(arquivo_lido, 500, 100);
+        }
+
+        for (int i = 0; i <= 10; i++) {
+
+            arquivo_lido = "caso3.txt";
+            executaAlgoritmo(arquivo_lido, 500, 100);
+        }
+        for (int i = 0; i <= 10; i++) {
+
+            arquivo_lido = "caso4.txt";
+            executaAlgoritmo(arquivo_lido, 500, 100);
+        }
+        for (int i = 0; i <= 10; i++) {
+
+            arquivo_lido = "caso5.txt";
+            executaAlgoritmo(arquivo_lido, 500, 100);
+        }
         for (int i = 0; i <= 10; i++) {
             arquivo_lido = "caso6.txt";
             executaAlgoritmo(arquivo_lido, 10, 50);
@@ -101,14 +103,14 @@ class Main {
             executaAlgoritmo(arquivo_lido, 10, 50);
         }
     }
-    
+
     static public void zeraStatic() {
         listaVertices = new TreeMap<>();
         arrayListaVertices = new ArrayList<>();
         listaSolucoes = new TreeMap<>();
         rand = new Random(System.currentTimeMillis());
     }
-    
+
     static public void setParam(int pop, int parada) {
         Main.qdePopulacao = pop;
         Main.qdeSorteio = (int) Math.floor(Main.qdePopulacao / 10);
@@ -117,7 +119,7 @@ class Main {
         }
         Main.pontoParada = parada;
     }
-    
+
     static public void executaAlgoritmo(String arquivo_lido, int pop, int parada) throws IOException {
         zeraStatic();
         setParam(pop, parada);
@@ -125,13 +127,14 @@ class Main {
         String nome_arquivo_log = String.valueOf(time_init);
         Leitura leitura = new Leitura();
         Relatorio relatorio = new Relatorio();
-        
+
         Solucao s = new Solucao(leitura.readFile(arquivo_lido, Main.run_codes));
-        
+
         if (Main.run_codes == 0) {
             relatorio.escreve_log(nome_arquivo_log, "Arquivo de Log log_" + nome_arquivo_log + ".txt");
             relatorio.escreve_log(nome_arquivo_log, "Teste " + arquivo_lido);
             relatorio.escreve_log(nome_arquivo_log, "Parametros: ");
+            relatorio.escreve_log(nome_arquivo_log, "SEM BUSCA NA VIZINHANCA");
             relatorio.escreve_log(nome_arquivo_log, "Tamanho da populacao " + qdePopulacao);
             relatorio.escreve_log(nome_arquivo_log, "Quantidade de solucoes para sorteio " + qdeSorteio);
             relatorio.escreve_log(nome_arquivo_log, "Tipo de cruzamento " + tipoCruzamento);
@@ -150,7 +153,7 @@ class Main {
         qdeMedianas = leitura.qdeMedianas;
         int iteracoes = 0;
         int countParada = 0;
-        
+
         int size_solucoes = listaSolucoes.size();
         while (size_solucoes < qdePopulacao) {
             Solucao solucao = new Solucao();
@@ -164,11 +167,11 @@ class Main {
             relatorio.escreve_log(nome_arquivo_log, "Tempo para gerar populacao inicial aleatoria: " + ((System.currentTimeMillis() - time_init) / 1000) + "s ");
             time_init = System.currentTimeMillis();
         }
-        
+
         Solucao solucao1;
         Solucao solucao2;
         Solucao nova_solucao;
-        
+
         while (countParada <= pontoParada && listaSolucoes.firstEntry().getValue().custo > 0) {
             solucao1 = Genetico.torneio(listaSolucoes, qdeSorteio);
             solucao2 = Genetico.torneio(listaSolucoes, qdeSorteio);
@@ -179,9 +182,8 @@ class Main {
             nova_solucao = Genetico.cruzar(solucao1, solucao2, tipoCruzamento);
 //            nova_solucao.verificaMedianasRepetidas();
             nova_solucao = Genetico.mutacao(nova_solucao, taxaMutacao, bitsMutacao);
-            
-            nova_solucao = Genetico.buscaVizinhanca(nova_solucao);
-            
+
+//            nova_solucao = Genetico.buscaVizinhanca(nova_solucao);
             if (nova_solucao.custo < listaSolucoes.lastEntry().getKey() && !listaSolucoes.containsKey(nova_solucao.custo)) {
                 if (nova_solucao.custo < listaSolucoes.firstEntry().getKey() && Main.run_codes == 0) {
                     relatorio.escreve_log(nome_arquivo_log, iteracoes + " Tamanho-> " + listaSolucoes.size() + " - Melhor-> " + listaSolucoes.firstEntry().getKey() + " Pior-> " + listaSolucoes.lastEntry().getKey());
@@ -204,18 +206,18 @@ class Main {
         }
         if (Main.run_codes == 1) {
             System.out.println(listaSolucoes.lastEntry().getKey());
-            
+
         }
     }
-    
+
     private static class Relatorio {
-        
+
         TreeMap<Integer, Double> iteracoes = new TreeMap<>();
-        
+
         void add(Integer iter, Double melhor) {
             iteracoes.put(iter, melhor);
         }
-        
+
         void escreve_log(String nome_arq, String str) throws IOException {
             File file = new File(System.getProperty("user.dir") + "/log/log_" + nome_arq + ".txt");
             if (!file.exists()) {
@@ -226,7 +228,7 @@ class Main {
             bw.write(str + "\n");
             bw.close();
         }
-        
+
         void geraRelatorio(String nome_arq, String caso) throws IOException {
 //            System.out.println("Iniciando escrita relatorio");
             String strprint = "var geneticData_" + nome_arq + " = [[" + nome_arq + "],";
@@ -238,7 +240,7 @@ class Main {
             escreveRelatorioJs(strprint, caso);
 //            System.out.println("Fim escrita relatorio");
         }
-        
+
         void escreveRelatorioJs(String data, String caso) throws IOException {
 //            try (Writer writer = new BufferedWriter(new OutputStreamWriter(
 //                    new FileOutputStream("grafico/data.js"), "utf-8"))) {
@@ -254,9 +256,9 @@ class Main {
             bw.close();
         }
     }
-    
+
     private static class Genetico {
-        
+
         static Solucao buscaVizinhanca(Solucao solucao) {
             int tipo = 3;// maneiras 1 e 0 de gerar vizinhos
             int nivel = 3;//profundidade de vizinho
@@ -280,10 +282,10 @@ class Main {
             }
             return melhor_vizinho;
         }
-        
+
         static Solucao getMelhorVizinho(Solucao solucao, int tipo, int N) {
             int size = solucao.medianas.size();
-            
+
             Solucao melhor_vizinho = solucao;
             Solucao vizinho;
             int j;
@@ -312,7 +314,7 @@ class Main {
                     }
                 }
             }
-            
+
             return melhor_vizinho;
         }
 
@@ -342,17 +344,17 @@ class Main {
                 }
 //                random = (int) (Math.random() * lista_vertices.size());
                 random = rand.nextInt(lista_vertices.size());
-                
+
                 v = lista_vertices.get(random);
                 lista_vertices.remove(random);
                 count++;
             }
             retorno = new Mediana(v.id);
             retorno.vertice_mediana = v;
-            
+
             return retorno;
         }
-        
+
         static Mediana getMelhorVizinhoTipo2(Solucao solucao, Mediana m, int taxaQde) {
             int random;
             int count = taxaQde;
@@ -380,7 +382,7 @@ class Main {
             }
 //            random = (int) (Math.random() * lista_vertices.size());
             random = rand.nextInt(lista_vertices.size());
-            
+
             Vertice v = lista_vertices.get(random);
             while (solucao.containsV(v)) {
                 if (count > 3 || lista_vertices.size() <= 1) {
@@ -390,7 +392,7 @@ class Main {
                 }
 //                random = (int) (Math.random() * lista_vertices.size());
                 random = rand.nextInt(lista_vertices.size());
-                
+
                 v = lista_vertices.get(random);
                 lista_vertices.remove(random);
                 count++;
@@ -399,13 +401,13 @@ class Main {
             retorno.vertice_mediana = v;
             return retorno;
         }
-        
+
         static Mediana getMelhorVizinhoTipo3(Solucao solucao, Mediana m) {
             int random;
             int count = 0;
             Mediana retorno;
             random = rand.nextInt(arrayListaVertices.size());
-            
+
             Vertice v = arrayListaVertices.get(random);
             while (solucao.containsV(v)) {
                 if (count > 3) {
@@ -415,7 +417,7 @@ class Main {
                 }
 //                random = (int) (Math.random() * lista_vertices.size());
                 random = rand.nextInt(arrayListaVertices.size());
-                
+
                 v = arrayListaVertices.get(random);
                 count++;
             }
@@ -423,7 +425,7 @@ class Main {
             retorno.vertice_mediana = v;
             return retorno;
         }
-        
+
         static Solucao cruzar(Solucao solucao1, Solucao solucao2, int tipoCruzamento) {
             ArrayList<Mediana> medianas_cruzadas = null;
             Solucao retorno = null;
@@ -438,12 +440,12 @@ class Main {
             }
             return retorno;
         }
-        
+
         static Solucao cruzaMedianasIntersessao(Solucao solucao1, Solucao solucao2) {
             int tamanho_medianas_solucao = solucao1.medianas.size();
             Solucao retorno = new Solucao();
             Solucao sol_temp = new Solucao();
-            
+
             List<Mediana> lista_med1 = new ArrayList<>();
             List<Mediana> lista_med2 = new ArrayList<>();
             List<Mediana> lista_med_intersecao = new ArrayList<>();
@@ -468,7 +470,7 @@ class Main {
             if (true) {
                 return retorno;
             }
-            
+
             while (retorno.medianas.size() < solucao1.medianas.size()) {
             }
             for (int i = 0; i < lista_med1.size(); i++) {
@@ -506,7 +508,7 @@ class Main {
             retorno.calculaCusto();
             return retorno;
         }
-        
+
         static Solucao cruzaMedianasBitsAleatorios(Solucao solucao1, Solucao solucao2) {
             int tamanho_medianas_solucao = solucao1.medianas.size();
             Solucao sol_temp = new Solucao();
@@ -531,10 +533,10 @@ class Main {
                 retorno2.medianas.add(sol_temp.medianas.get(j));
                 j--;
             }
-            
+
             retorno1.calculaCusto();
             retorno2.calculaCusto();
-            
+
             if (retorno1.custo < retorno2.custo) {
                 return retorno1;
             }
@@ -584,12 +586,12 @@ class Main {
 //            }
 
         }
-        
+
         static Solucao mutacao_aleatoria(Solucao solucao, int taxa_mucacao, int qde_bits) {
             int random;
 //            random = (int) Math.floor(Math.random() * 101);
             random = rand.nextInt(101);
-            
+
             if (random < taxa_mucacao) {
                 Main.quantidade_mutacao++;
                 List<Mediana> novas_medianas = new ArrayList<>();
@@ -602,7 +604,7 @@ class Main {
                     if (!solucao.containsV(randomVertice)) {
 //                        random = (int) (Math.random() * solucao.medianas.size());//index da mediana que sera substituida
                         random = rand.nextInt(solucao.medianas.size());
-                        
+
                         solucao.medianas.remove(random);
                         novaMediana = new Mediana(randomVertice.id);
                         novaMediana.vertice_mediana = randomVertice;
@@ -615,7 +617,7 @@ class Main {
             solucao.calculaCusto();
             return solucao;
         }
-        
+
         static Solucao mutacao_proxima(Solucao solucao, int taxa_mucacao, int qde_bits) {
             /*NAO USADO POR CONSELHO DO PROFESSOR*/
             if (true) {
@@ -624,7 +626,7 @@ class Main {
             int random;
 //            random = (int) Math.floor(Math.random() * 101);
             random = rand.nextInt(101);
-            
+
             if (random < taxa_mucacao) {
                 Main.quantidade_mutacao++;
                 List<Mediana> novas_medianas = new ArrayList<>();
@@ -635,7 +637,7 @@ class Main {
                 while (qde_bits > 0) {
 //                    random = (int) (Math.random() * solucao.medianas.size());//index da mediana que sera substituida
                     random = rand.nextInt(solucao.medianas.size());
-                    
+
                     Mediana m = solucao.medianas.get(random);
                     List<Double> keys = new ArrayList<>(m.vertice_mediana.distanciaVertices.keySet());
                     maxRand = (int) Math.floor((keys.size() / 30));
@@ -643,15 +645,15 @@ class Main {
 //                    Random randomgg = new Random();
 //                    Double randomKey = keys.get(randomgg.nextInt(maxRand));
                     Double randomKey = keys.get(rand.nextInt(maxRand));
-                    
+
                     List<Vertice> l = m.vertice_mediana.distanciaVertices.get(randomKey);
 //                    randomVertice = l.get((int) Math.floor(Math.random() * (l.size())));
                     randomVertice = l.get(rand.nextInt(l.size()));
-                    
+
                     if (!solucao.containsV(randomVertice)) {
 //                        random = (int) (Math.random() * solucao.medianas.size());//index da mediana que sera substituida
                         random = rand.nextInt(solucao.medianas.size());
-                        
+
                         solucao.medianas.remove(random);
                         novaMediana = new Mediana(randomVertice.id);
                         novaMediana.vertice_mediana = randomVertice;
@@ -664,15 +666,15 @@ class Main {
             solucao.calculaCusto();
             return solucao;
         }
-        
+
         static Solucao mutacao(Solucao solucao, int taxa_mucacao, int qde_bits) {
             if (Main.tipoMutacao == 0) {
                 return mutacao_aleatoria(solucao, taxa_mucacao, qde_bits);
             } else {
                 return mutacao_proxima(solucao, taxa_mucacao, qde_bits);
-                
+
             }
-            
+
         }
 
         /*verificar se para cruzar dois elementos, realizar 2x o algoritmo ou, 1x e utilizar os dois melhores*/
@@ -689,27 +691,27 @@ class Main {
             return listaCompetidores.firstEntry().getValue();
         }
     }
-    
+
     private static class Solucao {
-        
+
         static final AtomicInteger contador = new AtomicInteger(0);
         int id;
         static TreeMap<Integer, List<Vertice>> listaVertices = new TreeMap<>();
         static ArrayList<Vertice> arrayListaVertices = new ArrayList<>();
-        
+
         List<Mediana> medianas = new ArrayList<>();
         double custo;
-        
+
         public Solucao() {
             id = contador.incrementAndGet();
         }
-        
+
         public Solucao(TreeMap<Integer, List<Vertice>> listaVertices) {
             Solucao.listaVertices = listaVertices;
             arrayListaVertices = Main.arrayListaVertices;
-            
+
         }
-        
+
         void iniciaPopulacaoAleatoria3(int qdeMedianas, int qdePecas) {
             int random;
             int maxRandom = (int) Math.floor(qdePecas / qdeMedianas);
@@ -720,7 +722,7 @@ class Main {
                         if (size_mediana < qdeMedianas) {
 //                            random = (int) (Math.random() * maxRandom);
                             random = rand.nextInt(maxRandom);
-                            
+
                             if (random == 1) {
                                 Mediana m = new Mediana(v.id);
                                 m.vertice_mediana = v;
@@ -734,7 +736,7 @@ class Main {
                 }
             }
         }
-        
+
         void iniciaPopulacaoAleatoria(int qdeMedianas, int qdePecas) {
             int maxRandom = (int) Math.floor(qdePecas / qdeMedianas);
             int size_mediana = medianas.size();
@@ -753,7 +755,7 @@ class Main {
                 }
             }
         }
-        
+
         void calculaCusto() {
             this.custo = 0;
             Mediana m;
@@ -836,7 +838,7 @@ class Main {
             }
             return false;
         }
-        
+
         @Override
         public String toString() {
             String ls = System.getProperty("line.separator");
@@ -848,7 +850,7 @@ class Main {
 //        }
             return retorno;
         }
-        
+
         void verificaMedianasRepetidas() {
             int countMediana;
             for (Mediana m : this.medianas) {
@@ -860,7 +862,7 @@ class Main {
                             System.out.println("dumb -> " + m.vertice_mediana.id + " " + m2.vertice_mediana.id);
                             System.out.println(this.medianas);
                             Main.exit();
-                            
+
                             return;
                         }
                     }
@@ -868,16 +870,16 @@ class Main {
             }
         }
     }
-    
+
     private static class Mediana {
-        
+
         static final AtomicInteger contador = new AtomicInteger(0);
         int id;
         int demanda_atual;
         int qde_vertices = 0;
         Vertice vertice_mediana;
         List<Vertice> lista_vertices = new ArrayList<>();
-        
+
         public Mediana(int i) {
 //            id = contador.incrementAndGet();
             this.id = i;
@@ -889,7 +891,7 @@ class Main {
             this.vertice_mediana = m.vertice_mediana;
             this.demanda_atual = 0;
         }
-        
+
         boolean containsV(Vertice v) {
             if (v == null) {
                 return true;
@@ -899,7 +901,7 @@ class Main {
             }
             return false;
         }
-        
+
         @Override
         public String toString() {
             String ls = System.getProperty("line.separator");
@@ -913,30 +915,30 @@ class Main {
             return retorno;
         }
     }
-    
+
     private static class Vertice {
-        
+
         static final AtomicInteger contador = new AtomicInteger(0);
         TreeMap<Double, List<Vertice>> distanciaVertices = new TreeMap<>();
         HashMap<Integer, Double> distanciaVerticesHash = new HashMap<>();
-        
+
         int id;
         int posX;
         int posY;
         int capacidade;
         int demanda;
-        
+
         public Vertice() {
             id = contador.incrementAndGet();
         }
-        
+
         public Vertice(int posX, int posY, int capacidade, int demanda) {
             this.posX = posX;
             this.posY = posY;
             this.capacidade = capacidade;
             this.demanda = demanda;
         }
-        
+
         Mediana getMedianaProximaLivre(List<Mediana> medianas) {
             int capacidade_mediana, soma_cap_demanda;
             TreeMap<Double, List<Mediana>> listaDistancias = new TreeMap<>();
@@ -975,16 +977,16 @@ class Main {
             }
             return null;
         }
-        
+
         Double calculaDistanciaVertices(Vertice vertice) {
             return this.calculaPitagoras(this.posX, vertice.posX, this.posY, vertice.posY);
         }
-        
+
         Double calculaPitagoras(int x1, int x2, int y1, int y2) {
             Double retorno = Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
             return retorno;
         }
-        
+
         @Override
         public String toString() {
             String ls = System.getProperty("line.separator");
@@ -992,7 +994,7 @@ class Main {
             return retorno;
         }
     }
-    
+
     private static class CustomTreeMap {
 
 //    static Vertice getRandomVertice(TreeMap<Integer, List<Vertice>> treeMap, Integer randomIndex) {
@@ -1015,7 +1017,7 @@ class Main {
             treeMap.put(valor, tempList);
             return treeMap;
         }
-        
+
         static TreeMap<Double, List<Vertice>> addTreemap(TreeMap<Double, List<Vertice>> treeMap, Double valor, Vertice obj) {
             List<Vertice> tempList = null;
             if (treeMap.containsKey(valor)) {
@@ -1031,7 +1033,7 @@ class Main {
             treeMap.put(valor, tempList);
             return treeMap;
         }
-        
+
         static TreeMap<Integer, List<Vertice>> addTreemap(TreeMap<Integer, List<Vertice>> treeMap, Integer valor, Vertice obj) {
             List<Vertice> tempList = null;
             if (treeMap.containsKey(valor)) {
@@ -1047,7 +1049,7 @@ class Main {
             treeMap.put(valor, tempList);
             return treeMap;
         }
-        
+
         static TreeMap<Double, List<Mediana>> addTreemap(TreeMap<Double, List<Mediana>> treeMap, Double valor, Mediana obj) {
             List<Mediana> tempList = null;
             if (treeMap.containsKey(valor)) {
@@ -1068,12 +1070,12 @@ class Main {
 //        return addTreemap(listaDistancias, calculaDistanciaVertices, mediana);
 //    }
     }
-    
+
     private static class Leitura {
-        
+
         int qdePecas = 0;
         int qdeMedianas = 0;
-        
+
         TreeMap<Integer, List<Vertice>> readFile(String arquivo, int runcodes) throws IOException {
             TreeMap<Integer, List<Vertice>> listaV = new TreeMap<>(Collections.reverseOrder());
             ArrayList<Vertice> arrayV = new ArrayList<>();
@@ -1088,9 +1090,9 @@ class Main {
             }
             qdePecas = scan.nextInt();
             qdeMedianas = scan.nextInt();
-            
+
             scan.nextLine();
-            
+
             while (scan.hasNext()) {
                 switch (ind % 4) {
                     case 0:
@@ -1120,7 +1122,7 @@ class Main {
             Main.arrayListaVertices = arrayV;
             return listaV;
         }
-        
+
         TreeMap<Integer, List<Vertice>> readFilegg(String arquivo) throws IOException {
             TreeMap<Integer, List<Vertice>> listaV = new TreeMap<>(Collections.reverseOrder());
 //            TreeMap<Integer, List<Vertice>> listaV = new TreeMap<>();
@@ -1166,7 +1168,7 @@ class Main {
                     }
                 }
             }
-            
+
             Main.arrayListaVertices = arrayV;
 //        System.out.println(arrayV);
             return listaV;

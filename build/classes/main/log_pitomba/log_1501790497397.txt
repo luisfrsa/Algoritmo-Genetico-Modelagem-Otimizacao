@@ -1,0 +1,37 @@
+Arquivo de Log log_1501790497397.txt
+Teste caso5.txt
+Parametros: 
+Tamanho da populacao 500
+Quantidade de solucoes para sorteio 50
+Tipo de cruzamento 0
+Taxa de mutacao 5
+Quantidade de bits de mutacao 2
+Quantidade de iteracoes s/ melhoria para parada 100
+Tempo de leitura da entrada: 0s 
+Calculando distancia vertices: 0s 
+Tempo para gerar populacao inicial aleatoria: 0s 
+0 Tamanho-> 500 - Melhor-> 43179.34022953369 Pior-> 177043.05374220104
+1 Tamanho-> 500 - Melhor-> 42024.55776627787 Pior-> 157093.5172696009
+3 Tamanho-> 500 - Melhor-> 39349.90125643946 Pior-> 150750.01103788862
+10 Tamanho-> 500 - Melhor-> 38648.85186564971 Pior-> 141552.44622312885
+20 Tamanho-> 500 - Melhor-> 38114.61613536417 Pior-> 130421.63603456474
+22 Tamanho-> 500 - Melhor-> 37933.45075548019 Pior-> 127640.30105262467
+23 Tamanho-> 500 - Melhor-> 37793.72773366411 Pior-> 123037.82751557561
+45 Tamanho-> 500 - Melhor-> 36165.44066158079 Pior-> 104110.32858734786
+78 Tamanho-> 500 - Melhor-> 35804.857184071974 Pior-> 91412.30675222664
+104 Tamanho-> 500 - Melhor-> 35583.67929413204 Pior-> 84541.98515380111
+145 Tamanho-> 500 - Melhor-> 35472.14211927289 Pior-> 77477.40597057137
+160 Tamanho-> 500 - Melhor-> 35343.85639315172 Pior-> 75850.57342405501
+193 Tamanho-> 500 - Melhor-> 35308.900988221736 Pior-> 72108.23169614357
+196 Tamanho-> 500 - Melhor-> 35160.66947836547 Pior-> 71728.55857489095
+747 Tamanho-> 500 - Melhor-> 34418.60236342195 Pior-> 38068.734229355876
+901 Tamanho-> 500 - Melhor-> 33924.35857241413 Pior-> 37566.181574626404
+944 Tamanho-> 500 - Melhor-> 33888.702519781975 Pior-> 37433.431969812904
+974 Tamanho-> 500 - Melhor-> 33814.04433987548 Pior-> 37351.34459771939
+1165 Tamanho-> 500 - Melhor-> 33713.86070043778 Pior-> 36798.605871235995
+3213 Tamanho-> 500 - Melhor-> 33698.45683261594 Pior-> 34604.84641425914
+4842 Tamanho-> 500 - Melhor-> 33688.58340466247 Pior-> 34318.862780697644
+4933 Tamanho-> 500 - Melhor-> 33686.236621273936 Pior-> 34311.6573368045
+Tempo para encontrar melhor solucao local: 763s 
+Memoria usada->1781.489242553711
+.::Melhor solucao::. 33680.150985256245

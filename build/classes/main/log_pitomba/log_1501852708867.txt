@@ -1,0 +1,27 @@
+Arquivo de Log log_1501852708867.txt
+Teste caso7.txt
+Parametros: 
+Tamanho da populacao 10
+Quantidade de solucoes para sorteio 2
+Tipo de cruzamento 0
+Taxa de mutacao 5
+Quantidade de bits de mutacao 2
+Quantidade de iteracoes s/ melhoria para parada 50
+Tempo de leitura da entrada: 0s 
+Calculando distancia vertices: 0s 
+Tempo para gerar populacao inicial aleatoria: 15s 
+3 Tamanho-> 10 - Melhor-> 182063.83376019154 Pior-> 197368.71900833843
+4 Tamanho-> 10 - Melhor-> 180674.67093270202 Pior-> 195834.61008744696
+7 Tamanho-> 10 - Melhor-> 180318.1046604084 Pior-> 191133.49022506436
+8 Tamanho-> 10 - Melhor-> 179957.5607848213 Pior-> 187098.58797979227
+10 Tamanho-> 10 - Melhor-> 179774.15159277595 Pior-> 185687.88255692934
+16 Tamanho-> 10 - Melhor-> 177698.52597957873 Pior-> 182875.38707041513
+17 Tamanho-> 10 - Melhor-> 176040.09182269976 Pior-> 182063.83376019154
+21 Tamanho-> 10 - Melhor-> 175945.88391725995 Pior-> 180674.67093270202
+40 Tamanho-> 10 - Melhor-> 169991.61402656714 Pior-> 175945.88391725995
+50 Tamanho-> 10 - Melhor-> 169082.52951994954 Pior-> 172601.7669903952
+56 Tamanho-> 10 - Melhor-> 167792.95961332423 Pior-> 171839.2515103796
+66 Tamanho-> 10 - Melhor-> 167227.74329259555 Pior-> 169406.7803883408
+70 Tamanho-> 10 - Melhor-> 166927.21014412487 Pior-> 169216.18536521375
+75 Tamanho-> 10 - Melhor-> 163959.6236520041 Pior-> 168623.53444691558
+94 Tamanho-> 10 - Melhor-> 163517.54880651127 Pior-> 166927.21014412487

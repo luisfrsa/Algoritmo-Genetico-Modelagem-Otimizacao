@@ -1,0 +1,17 @@
+Arquivo de Log log_1501783319818.txt
+Teste caso2.txt
+Parametros: 
+Tamanho da populacao 500
+Quantidade de solucoes para sorteio 50
+Tipo de cruzamento 0
+Taxa de mutacao 5
+Quantidade de bits de mutacao 2
+Quantidade de iteracoes s/ melhoria para parada 100
+Tempo de leitura da entrada: 0s 
+Calculando distancia vertices: 0s 
+Tempo para gerar populacao inicial aleatoria: 0s 
+2 Tamanho-> 500 - Melhor-> 819.0443059451857 Pior-> 2341.646048126971
+8 Tamanho-> 500 - Melhor-> 773.1104232613932 Pior-> 2114.3456772355357
+Tempo para encontrar melhor solucao local: 13s 
+Memoria usada->282.26622009277344
+.::Melhor solucao::. 750.0401795210162
