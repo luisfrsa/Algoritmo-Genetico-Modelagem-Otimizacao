@@ -134,7 +134,7 @@ class Main {
             relatorio.escreve_log(nome_arquivo_log, "Arquivo de Log log_" + nome_arquivo_log + ".txt");
             relatorio.escreve_log(nome_arquivo_log, "Teste " + arquivo_lido);
             relatorio.escreve_log(nome_arquivo_log, "Parametros: ");
-//            relatorio.escreve_log(nome_arquivo_log, "SEM BUSCA NA VIZINHANCA");
+            relatorio.escreve_log(nome_arquivo_log, "SEM BUSCA NA VIZINHANCA");
             relatorio.escreve_log(nome_arquivo_log, "Tamanho da populacao " + qdePopulacao);
             relatorio.escreve_log(nome_arquivo_log, "Quantidade de solucoes para sorteio " + qdeSorteio);
             relatorio.escreve_log(nome_arquivo_log, "Tipo de cruzamento " + tipoCruzamento);
@@ -183,7 +183,7 @@ class Main {
 //            nova_solucao.verificaMedianasRepetidas();
             nova_solucao = Genetico.mutacao(nova_solucao, taxaMutacao, bitsMutacao);
 
-//            nova_solucao = Genetico.buscaVizinhanca(nova_solucao);
+            nova_solucao = Genetico.buscaVizinhanca(nova_solucao);
             if (nova_solucao.custo < listaSolucoes.lastEntry().getKey() && !listaSolucoes.containsKey(nova_solucao.custo)) {
                 if (nova_solucao.custo < listaSolucoes.firstEntry().getKey() && Main.run_codes == 0) {
                     relatorio.escreve_log(nome_arquivo_log, iteracoes + " Tamanho-> " + listaSolucoes.size() + " - Melhor-> " + listaSolucoes.firstEntry().getKey() + " Pior-> " + listaSolucoes.lastEntry().getKey());
