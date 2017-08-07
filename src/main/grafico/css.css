@@ -16,3 +16,7 @@ div.grafico {
     bottom: 10px;
 }
 
+ul li{
+    list-style: none;
+    float:left;
+}

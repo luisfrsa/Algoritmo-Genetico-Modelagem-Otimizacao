@@ -6,23 +6,38 @@ $scan = scandir($dirLog);
 foreach ($scan as $dir) {
     if ($dir != '..' and $dir != '.') {
         $content = file_get_contents($dirLog . $dir);
+        $sv = 0;
+        if (strstr($content, 'SEM BUSCA NA VIZINHANCA')) {
+            $sv = 1;
+        }
+        $explodeLinha = explode("\n", $content);
+        $meta = getMeta($explodeLinha[0], $explodeLinha[1], $sv);
         if (strstr($content, '.::Melhor solucao::.')) {
-            $indexSoma = 0;
-            if (strstr($content, 'SEM BUSCA NA VIZINHANCA')) {
-                $indexSoma = 1;
-            }
-            $explodeLinha = explode("\n", $content);
-            $meta = getMeta($explodeLinha[0], $explodeLinha[1]);
-            for ($i = (12 + $indexSoma); $i < (count($explodeLinha) - 4); $i++) {
+            $data = array();
+            for ($i = (12 + $sv); $i < (count($explodeLinha) - 4); $i++) {
                 $data[] = getData($explodeLinha[$i]);
             }
             $data[] = getBest($explodeLinha[count($explodeLinha) - 2], $data[count($data) - 1]['indice']);
-            print_r($meta);
-            echo toJs($data, $meta);
-            print_r($explodeLinha);
-            break;
+            $str = toJs($data, $meta);
+            writeData($str, $meta);
+        } else if (strstr($content, 'Tamanho->')) {
+            $data = array();
+            for ($i = (12 + $sv); $i < (count($explodeLinha) - 1); $i++) {
+                $data[] = getData($explodeLinha[$i]);
+            }
+            $str = toJs($data, $meta);
+            writeData($str, $meta);
+        } else {
+            echo "Sem melhor solucao" . $dir;
         }
     }
+}
+
+function writeData($str, $meta) {
+    $file = "../main/grafico/data/" . $meta['case'];
+    $handle = fopen($file, "a+");
+    fwrite($handle, $str);
+    fclose($handle);
 }
 
 function toJs($data, $meta) {
@@ -35,14 +50,19 @@ function toJs($data, $meta) {
     return $strRet;
 }
 
-function getMeta($line1, $line2) {
+function getMeta($line1, $line2, $sv) {
     $explodeName = explode(" ", $line1);
     $explodeCase = explode(" ", $line2);
     $return['name'] = $explodeName[count($explodeName) - 1];
     $return['time'] = substr($explodeName[count($explodeName) - 1], 4, -5);
     $return['var'] = "geneticData_" . substr($explodeName[count($explodeName) - 1], 4, -5);
-    $return['case'] = "data_" . substr($explodeCase[count($explodeCase) - 1], 0, -4) . "js";
-    $return['var_case'] = "geneticData_" . substr($explodeCase[count($explodeCase) - 1], 0, -4);
+    if ($sv == 0) {
+        $return['case'] = "data_" . substr($explodeCase[count($explodeCase) - 1], 0, -4) . "js";
+        $return['var_case'] = "geneticData_" . substr($explodeCase[count($explodeCase) - 1], 0, -4);
+    } else {
+        $return['case'] = "data_" . substr($explodeCase[count($explodeCase) - 1], 0, -5) . '_sv.' . "js";
+        $return['var_case'] = "geneticData_" . substr($explodeCase[count($explodeCase) - 1], 0, -5) . '_sv.';
+    }
     return $return;
 }
 
